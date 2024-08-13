@@ -26,7 +26,8 @@ edge.mount(path.join(__dirname, "views"));
 // Rute
 app.get("/", async (req, res, next) => {
   try {
-    const data = { title: "Home Page" };
+    const { groom, bride, send, partner } = req.params;
+    const data = { title: "Home Page", groom, bride, send, partner };
     const html = await edge.render("pages/main", data);
     res.setHeader("content-type", "text/html");
     res.send(html);

@@ -9,6 +9,10 @@
     @include('components/couple')
     @endslot
 
+    @slot('invitation')
+    @include('components/invitation')
+    @endslot
+
     @slot('location')
     @include('components/location')
     @end
@@ -17,8 +21,8 @@
     @include('components/gallery')
     @endslot
 
-    @slot('weddingTime')
-    @include('components/weddingtime')
+    @slot('sendpayment')
+    @include('components/sendpayment')
     @endslot
 
     @slot('chatForm')
