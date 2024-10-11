@@ -2,9 +2,9 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../configs/database.js";
 import { v6 as uuidv6 } from "uuid";
 
-class UcapanModels extends Model {}
+class UsersModels extends Model {}
 
-UcapanModels.init(
+UsersModels.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -16,19 +16,33 @@ UcapanModels.init(
       type: DataTypes.STRING(60),
       allowNull: true,
     },
-    coupleName: {
+    email: {
       type: DataTypes.STRING(60),
       allowNull: true,
-      defaultValue: "Partner",
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+      set(value) {
+        this.setDataValue("email", value.toLowerCase());
+      },
     },
-    attedance: {
+    alamat: {
+      type: DataTypes.STRING(60),
+      allowNull: true,
+    },
+    no_hp: {
+      type: DataTypes.BIGINT(15),
+      allowNull: true,
+    },
+    password: {
       type: DataTypes.ENUM(["Datang", "Berhalangan"]),
       allowNull: false,
       defaultValue: "Datang",
     },
-    chat: {
-      type: DataTypes.TEXT,
-      allowNull: true,
+    role: {
+      type: DataTypes(["admin", "user"]),
+      allowNull: false,
     },
   },
   {
@@ -37,4 +51,4 @@ UcapanModels.init(
   }
 );
 
-export default UcapanModels;
+export default UsersModels;
