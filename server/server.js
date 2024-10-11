@@ -1,13 +1,11 @@
 import express from "express";
-// import AuthRouter from "./routes/api/auth/auth.route";
-import ChatRoutes from "./routes/api/chat/chat.route.js";
+import AuthRouter from "./routes/api/auth/auth.route.js";
 
 const app = express();
 
 app.use(express.json());
 
 // Route
-// app.use("/", AuthRouter);
-app.use(ChatRoutes);
+app.use("/", AuthRouter);
 
 export default app;

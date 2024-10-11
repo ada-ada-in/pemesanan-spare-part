@@ -2,8 +2,7 @@ import "dotenv/config";
 import app from "./server/server.js";
 import http from "http";
 import express from "express";
-import { sequelize } from "./server/configs/database.js";
-import UsersModels from "./server/models/user.model.js";
+// import { sequelize } from "./server/configs/database.js";
 
 app.use(express.json());
 app.get("/", async (req, res, next) => {
@@ -15,13 +14,13 @@ const PORT = process.env.PORT || 8000;
 
 const start = async () => {
   try {
-    const database = await sequelize.sync();
-    if (!database) {
-      console.log("database cannot sync");
-    } else {
-      console.log("====================================================");
-      console.log("Database Connected Successfully");
-    }
+    // const database = await sequelize.sync();
+    // if (!database) {
+    //   console.log("database cannot sync");
+    // } else {
+    //   console.log("====================================================");
+    //   console.log("Database Connected Successfully");
+    // }
 
     server.listen(PORT, () =>
       console.log(`🚀 [SERVER] is running on port http://localhost:${PORT}`)

@@ -36,18 +36,18 @@ UsersModels.init(
       allowNull: true,
     },
     password: {
-      type: DataTypes.ENUM(["Datang", "Berhalangan"]),
+      type: DataTypes.STRING(40),
       allowNull: false,
       defaultValue: "Datang",
     },
     role: {
-      type: DataTypes(["admin", "user"]),
+      type: DataTypes.ENUM(["admin", "user"]),
       allowNull: false,
     },
   },
   {
     sequelize,
-    modelName: "ucapan",
+    modelName: "users",
   }
 );
 

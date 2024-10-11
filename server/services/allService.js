@@ -1,4 +1,4 @@
 import { GenericServices } from "./genericService.js";
-import UcapanModels from "../models/ucapan.model.js";
+import UsersModels from "../models/user.model.js";
 
-export const ucapanServices = new GenericServices(UcapanModels);
+export const ucapanServices = new GenericServices(UsersModels);
