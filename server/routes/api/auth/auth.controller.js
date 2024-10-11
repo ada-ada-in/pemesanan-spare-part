@@ -14,6 +14,7 @@ export const register = async (req, res) => {
       return response.fail400("please input email");
     }
     const existingEmail = await allService.ucapanServices.getEmailOne(email);
+    console.log("email" + existingEmail);
     if (existingEmail) {
       return response.fail400("email has registered");
     }

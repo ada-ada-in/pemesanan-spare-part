@@ -33,7 +33,7 @@ export class GenericServices {
 
   async getEmailOne(email) {
     try {
-      this.item = await this.model.findAll({
+      this.item = await this.model.findOne({
         where: {
           email: email,
         },
