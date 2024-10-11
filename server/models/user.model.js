@@ -32,7 +32,7 @@ UsersModels.init(
       allowNull: true,
     },
     no_hp: {
-      type: DataTypes.BIGINT(15),
+      type: DataTypes.STRING(50),
       allowNull: true,
     },
     password: {

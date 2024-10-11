@@ -7,7 +7,7 @@ class ResponseHandler {
     this.res.status(200).json({
       status: {
         code: 200,
-        message: "success get data",
+        message: "Success: Data retrieved successfully",
       },
       data,
     });
@@ -17,7 +17,7 @@ class ResponseHandler {
     this.res.status(201).json({
       status: {
         code: 201,
-        message: "Created Data Sucessfully",
+        message: "Success: Data created successfully",
       },
       data,
     });
@@ -27,47 +27,47 @@ class ResponseHandler {
     this.res.status(400).json({
       status: {
         code: 400,
-        message: `Client side error! - ${message}`,
+        message: `Client Error: ${message}`,
       },
       data: null,
     });
   }
 
-  fail401() {
+  fail401(message = "Unauthorized Access!") {
     this.res.status(401).json({
       status: {
         code: 401,
-        message: "Unauthorized Access!",
+        message: `Client Error: ${message}`,
       },
       data: null,
     });
   }
 
-  fail403(message) {
+  fail403(message = "Access Forbidden!") {
     this.res.status(403).json({
       status: {
         code: 403,
-        message: `Forbidden - ${message}`,
+        message: `Client Error: ${message}`,
       },
       data: null,
     });
   }
 
-  fail404() {
+  fail404(message = "Resource not found!") {
     this.res.status(404).json({
       status: {
         code: 404,
-        message: "URL not found!",
+        message: `Client Error: ${message}`,
       },
       data: null,
     });
   }
 
-  fail405() {
+  fail405(message = "Request method not allowed!") {
     this.res.status(405).json({
       status: {
         code: 405,
-        message: "Request method not allowed!",
+        message: `Client Error: ${message}`,
       },
       data: null,
     });
@@ -77,7 +77,7 @@ class ResponseHandler {
     this.res.status(500).json({
       status: {
         code: 500,
-        message: `Server error! - ${error}`,
+        message: `Server Error: ${error}`,
       },
     });
   }

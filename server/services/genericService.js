@@ -13,13 +13,31 @@ export class GenericServices {
       this.item = await this.model.create(data);
       return this.item;
     } catch (error) {
-      response.fail500(error);
+      return res.status(500).json({
+        status: {
+          code: 500,
+          message: `Server Error: ${error}`,
+        },
+      });
     }
   }
 
   async getData() {
     try {
       this.item = await this.model.findAll();
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getEmailOne(email) {
+    try {
+      this.item = await this.model.findAll({
+        where: {
+          email: email,
+        },
+      });
       return this.item;
     } catch (error) {
       response.fail500(error);
