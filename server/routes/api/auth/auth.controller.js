@@ -13,13 +13,12 @@ export const register = async (req, res) => {
     if (!email) {
       return response.fail400("please input email");
     }
-    const existingEmail = await allService.ucapanServices.getEmailOne(email);
-    console.log("email" + existingEmail);
+    const existingEmail = await allService.authService.getEmailOne(email);
     if (existingEmail) {
       return response.fail400("email has registered");
     }
     const encryptedPassword = await encrypt(password);
-    const registerUser = await allService.ucapanServices.create({
+    const registerUser = await allService.authService.create({
       name,
       email,
       password: encryptedPassword,
@@ -31,4 +30,8 @@ export const register = async (req, res) => {
   } catch (error) {
     return response.fail500(error.message);
   }
+};
+
+export const login = async (req, res) => {
+  const response = new ResponseHandler(res);
 };
