@@ -43,27 +43,13 @@ export class GenericServices {
     }
   }
 
-  async getDataUser(id) {
+  async getRoleWhenUserLogin(id) {
     try {
       this.item = await this.model.findOne({
         where: {
           id: id,
         },
-      });
-      this.item = this.item.map((record) => {
-        const formattedDate = record.createdAt
-          .toISOString()
-          .replace("T", " ")
-          .substring(0, 19);
-        const formattedUpdatedDate = record.updatedAt
-          .toISOString()
-          .replace("T", " ")
-          .substring(0, 19);
-        return {
-          ...record.toJSON(),
-          createdAt: formattedDate,
-          updatedAt: formattedUpdatedDate,
-        };
+        attributes: ["role"],
       });
       return this.item;
     } catch (error) {

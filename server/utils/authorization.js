@@ -17,8 +17,6 @@ export const verifyToken = (req, res, next) => {
     }
     req.id = decoded.id;
     req.role = decoded.role;
-    console.log(req.id);
-    console.log(req.role);
     next();
   });
 };

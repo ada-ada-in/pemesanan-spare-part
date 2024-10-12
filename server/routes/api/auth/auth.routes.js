@@ -3,7 +3,7 @@ import {
   register,
   login,
   logout,
-  //   getDataWhenLogin,
+  getRoleWhenLogin,
 } from "./auth.controller.js";
 
 import express from "express";
@@ -12,6 +12,6 @@ const router = express.Router();
 router.post("/register", verifyToken, register);
 router.post("/login", login);
 router.delete("/logout", logout);
-// router.get("/userlogin", getDataWhenLogin);
+router.get("/getrolewhenlogin", verifyToken, getRoleWhenLogin);
 
 export default router;

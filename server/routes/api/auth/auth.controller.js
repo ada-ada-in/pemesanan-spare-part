@@ -72,18 +72,16 @@ export const logout = async (req, res) => {
   }
 };
 
-export const getDataWhenLogin = async (req, res) => {
+export const getRoleWhenLogin = async (req, res) => {
   const response = new ResponseHandler(res);
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    return response.fail400("Token not provided");
-  }
-  const secretKey = process.env.SECRET_KEY;
-  const decoded = jwt.verify(token, secretKey);
-  const { id } = decoded;
   try {
-    const getUserData = await allService.authService.getDataUser(id);
-    return response.success200(getUserData);
+    const id = req.id;
+    const getRoleWhenUserLogin =
+      await allService.authService.getRoleWhenUserLogin(id);
+    if (!getRoleWhenUserLogin) {
+      return response.fail400("id is undifiend");
+    }
+    return response.success200(getRoleWhenUserLogin);
   } catch (error) {
     return response.fail500(error.message);
   }

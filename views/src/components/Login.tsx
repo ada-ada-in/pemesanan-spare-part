@@ -37,8 +37,8 @@ export default function Login() {
         }
       );
       const response = await request.json();
-      const getMyProfile = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
+      const getUserRole = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/getrolewhenlogin`,
         {
           method: "GET",
           headers: {
@@ -47,18 +47,25 @@ export default function Login() {
           },
         }
       );
-      const myProfile = await getMyProfile.json();
-      if (myProfile.data.role !== "admin")
+      const role = await getUserRole.json();
+      if (role.data.role !== "admin" || role.data.role !== "user") {
         return toast.error("Email dan password salah");
-      if (response.token) {
+      }
+      if (response.token && role.data.role == "admin") {
         Cookies.set("token", response.token);
         toast.success("Login berhasil");
         setTimeout(() => {
           Router.push("/admin");
         }, 1000);
-      } else {
-        toast.error(response.message);
       }
+      if (response.token && role.data.role == "user") {
+        Cookies.set("token", response.token);
+        toast.success("Login berhasil");
+        setTimeout(() => {
+          Router.push("/user");
+        }, 1000);
+      }
+      toast.error(response.message);
     } catch (error: any) {
       console.error("Error:", error);
     }
