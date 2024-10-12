@@ -13,18 +13,30 @@ export class GenericServices {
       this.item = await this.model.create(data);
       return this.item;
     } catch (error) {
-      return res.status(500).json({
-        status: {
-          code: 500,
-          message: `Server Error: ${error}`,
-        },
-      });
+      response.fail500(error);
     }
   }
 
   async getData() {
     try {
-      this.item = await this.model.findAll();
+      this.item = await this.model.findAll({
+        order: [["createdAt", "DESC"]],
+      });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
       return this.item;
     } catch (error) {
       response.fail500(error);
@@ -36,6 +48,32 @@ export class GenericServices {
       this.item = await this.model.findOne({
         where: {
           email: email,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getMotorNameCheck(data) {
+    try {
+      this.item = await this.model.findOne({
+        where: {
+          motor_name: data,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getMotorYearCheck(data) {
+    try {
+      this.item = await this.model.findOne({
+        where: {
+          tahun: data,
         },
       });
       return this.item;
