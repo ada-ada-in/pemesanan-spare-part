@@ -24,7 +24,7 @@ export const createMotor = async (req, res) => {
     }
     const createNewMotor = await allService.motorService.create({
       motor_name,
-      tahun,
+      tahun: parseInt(tahun),
     });
     return response.success201(createNewMotor);
   } catch (error) {
