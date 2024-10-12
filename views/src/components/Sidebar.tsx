@@ -30,7 +30,7 @@ import Image from "next/image";
 
 const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
-  { name: "Mobil", href: "/admin/mobil", icon: TruckIcon, current: false },
+  { name: "AA", href: "/admin/mobil", icon: TruckIcon, current: false },
   {
     name: "Kota",
     href: "/admin/kota",
@@ -62,7 +62,13 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Sidebar({ children, profile }: { children: any; profile?: any }) {
+export default function Sidebar({
+  children,
+  profile,
+}: {
+  children: any;
+  profile?: any;
+}) {
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [navigation, setNavigation] = React.useState(navigations);
@@ -133,7 +139,7 @@ export default function Sidebar({ children, profile }: { children: any; profile?
                 <nav className="flex flex-1 flex-col">
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
-                      <ul role="list" className="-mx-2 space-y-1">
+                      {/* <ul role="list" className="-mx-2 space-y-1">
                         {navigation.map((item) => (
                           <li key={item.name}>
                             <Link
@@ -158,7 +164,7 @@ export default function Sidebar({ children, profile }: { children: any; profile?
                             </Link>
                           </li>
                         ))}
-                      </ul>
+                      </ul> */}
                     </li>
                     <li className="mt-auto">
                       <Link
@@ -257,7 +263,8 @@ export default function Sidebar({ children, profile }: { children: any; profile?
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {profile.data.name}
+                        {/* {profile.data.name} */}
+                        prfile
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"

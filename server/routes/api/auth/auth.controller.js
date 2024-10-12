@@ -46,8 +46,8 @@ export const login = async (req, res) => {
     const secretKey = process.env.SECRET_KEY;
     const payload = {
       id: user.id,
+      role: user.role,
     };
-    console.log("payload " + payload.id);
     await compare(password, user.password);
     const token = jwt.sign(payload, secretKey, {
       expiresIn: "3d",
@@ -67,6 +67,23 @@ export const logout = async (req, res) => {
       return response.success200("Logout successful");
     }
     return response.fail400("Token not provided");
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getDataWhenLogin = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return response.fail400("Token not provided");
+  }
+  const secretKey = process.env.SECRET_KEY;
+  const decoded = jwt.verify(token, secretKey);
+  const { id } = decoded;
+  try {
+    const getUserData = await allService.authService.getDataUser(id);
+    return response.success200(getUserData);
   } catch (error) {
     return response.fail500(error.message);
   }
