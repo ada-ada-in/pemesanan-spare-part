@@ -3,7 +3,9 @@ import app from "./server/server.js";
 import http from "http";
 import express from "express";
 import { sequelize } from "./server/configs/database.js";
+import cors from "cors";
 
+app.use(cors());
 app.use(express.json());
 app.get("/", async (req, res, next) => {
   return res.send("Okeee");

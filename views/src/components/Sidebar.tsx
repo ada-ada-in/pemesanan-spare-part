@@ -30,31 +30,6 @@ import Image from "next/image";
 
 const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
-  { name: "AA", href: "/admin/mobil", icon: TruckIcon, current: false },
-  {
-    name: "Kota",
-    href: "/admin/kota",
-    icon: BuildingOffice2Icon,
-    current: false,
-  },
-  {
-    name: "Jurusan",
-    href: "/admin/jurusan",
-    icon: CalendarIcon,
-    current: false,
-  },
-  {
-    name: "Transaksi",
-    href: "/admin/transaksi",
-    icon: DocumentDuplicateIcon,
-    current: false,
-  },
-  {
-    name: "Paket",
-    href: "/admin/paket",
-    icon: GiftIcon,
-    current: false,
-  },
   { name: "User", href: "/admin/user", icon: UsersIcon, current: false },
 ];
 
@@ -87,7 +62,7 @@ export default function Sidebar({
     Cookies.remove("token");
     toast.success("Logout berhasil");
     setTimeout(() => {
-      router.push("/login");
+      router.push("/");
     }, 1000);
   }
 
@@ -264,7 +239,7 @@ export default function Sidebar({
                         aria-hidden="true"
                       >
                         {/* {profile.data.name} */}
-                        prfile
+                        Profile
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"

@@ -13,43 +13,42 @@ interface Stats {
   unit?: string;
 }
 
-// export async function getServerSideProps() {
-//   // export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   // const [isLogin, token]: Guard = guard(context);
-//   // if (!isLogin)
-//   //   return {
-//   //     redirect: {
-//   //       destination: "/login",
-//   //     },
-//   //   };
-//   //   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-//   //   const [
-//   //     dataProfile,
-//   //     dataMobil,
-//   //     dataKota,
-//   //     dataJurusan,
-//   //     dataTransaksi,
-//   //     dataPaket,
-//   //     dataUser,
-//   //   ] = await Promise.all([
-//   //     getData(token, `${backendUrl}/user/profile`),
-//   //     getData(token, `${backendUrl}/mobil`),
-//   //     getData(token, `${backendUrl}/kota`),
-//   //     getData(token, `${backendUrl}/jurusan`),
-//   //     getData(token, `${backendUrl}/transaksi/admin`),
-//   //     getData(token, `${backendUrl}/paket`),
-//   //     getData(token, `${backendUrl}/user`),
-//   //   ]);
-//   //   const stats: Stats[] = [
-//   //     { name: "Mobil", value: dataMobil?.data?.length || 0 },
-//   //     { name: "Kota", value: dataKota?.data?.length || 0, unit: "kota" },
-//   //     { name: "Jurusan", value: dataJurusan?.data?.length || 0, unit: "tujuan" },
-//   //     { name: "Transaksi", value: dataTransaksi?.data?.length || 0 },
-//   //     { name: "Paket", value: dataPaket?.data?.length || 0, unit: "paket" },
-//   //     { name: "User", value: dataUser.length || 0, unit: "account" },
-//   //   ];
-//   //   return { props: { stats, profile: dataProfile || null } };
-//   // }
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const [isLogin, token]: Guard = guard(context);
+  if (!isLogin)
+    return {
+      redirect: {
+        destination: "/",
+      },
+    };
+  // const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  // const [
+  //   dataProfile,
+  //   dataMobil,
+  //   dataKota,
+  //   dataJurusan,
+  //   dataTransaksi,
+  //   dataPaket,
+  //   dataUser,
+  // ] = await Promise.all([
+  //   getData(token, `${backendUrl}/user/profile`),
+  //   getData(token, `${backendUrl}/mobil`),
+  //   getData(token, `${backendUrl}/kota`),
+  //   getData(token, `${backendUrl}/jurusan`),
+  //   getData(token, `${backendUrl}/transaksi/admin`),
+  //   getData(token, `${backendUrl}/paket`),
+  //   getData(token, `${backendUrl}/user`),
+  // ]);
+  // const stats: Stats[] = [
+  //   { name: "Mobil", value: dataMobil?.data?.length || 0 },
+  //   { name: "Kota", value: dataKota?.data?.length || 0, unit: "kota" },
+  //   { name: "Jurusan", value: dataJurusan?.data?.length || 0, unit: "tujuan" },
+  //   { name: "Transaksi", value: dataTransaksi?.data?.length || 0 },
+  //   { name: "Paket", value: dataPaket?.data?.length || 0, unit: "paket" },
+  //   { name: "User", value: dataUser.length || 0, unit: "account" },
+  // ];
+  return { props: {} };
+}
 
 export default function Index({
   stats,
