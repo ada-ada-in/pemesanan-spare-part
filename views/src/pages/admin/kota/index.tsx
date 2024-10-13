@@ -23,18 +23,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         destination: "/login",
       },
     };
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const [dataProfile, dataKota] = await Promise.all([
-    getData(token, `${backendUrl}/user/profile`),
-    getData(token, `${backendUrl}/kota`),
-  ]);
+  // const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  // const [dataProfile, dataKota] = await Promise.all([
+  //   getData(token, `${backendUrl}/user/profile`),
+  //   getData(token, `${backendUrl}/kota`),
+  // ]);
   return {
     props: {
       token,
-      data: dataKota.data || null,
-      profile: dataProfile || null,
     },
   };
+  // return {
+  //   props: {
+  //     token,
+  //     data: dataKota.data || null,
+  //     profile: dataProfile || null,
+  //   },
+  // };
 }
 
 export default function Index({

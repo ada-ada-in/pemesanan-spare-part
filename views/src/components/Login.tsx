@@ -2,6 +2,7 @@ import React from "react";
 import Router from "next/router";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 export default function Login() {
   const [data, setData] = React.useState({
@@ -47,7 +48,7 @@ export default function Login() {
           }, 1000))
         : (toast.success("User login success"),
           setTimeout(() => {
-            Router.push("/admin");
+            Router.push("/user");
           }, 1000));
 
       Cookies.set("token", response.data);
@@ -65,39 +66,62 @@ export default function Login() {
     <div className="grid md:h-screen md:grid-cols-2">
       <div className="flex flex-col items-center justify-center bg-white">
         <div className="max-w-lg px-5 py-16 text-center md:px-10 md:py-24 lg:py-32">
-          <h2 className="mb-8 text-3xl font-bold md:mb-12 md:text-3xl">
-            Sistem informasi pemesanan sparepart yamaha sabang raya motor handil
-          </h2>
-          <form className="mx-auto mb-4 max-w-sm pb-4" onSubmit={handlerLogin}>
-            <input
-              type="email"
-              className="mb-4 block h-9 w-full border border-black bg-[#f2f2f7] px-3 py-6 pl-14 text-sm text-[#333333]"
-              maxLength={256}
-              name="email"
-              placeholder="Email Address"
-              required
-              onChange={handleChange}
-            />
-            <input
-              type="password"
-              className="mb-4 block h-9 w-full border border-black bg-[#f2f2f7] px-3 py-6 pl-14 text-sm text-[#333333]"
-              placeholder="Password (min 8 characters)"
-              required
-              name="password"
-              onChange={handleChange}
-            />
-            <label className="mb-6 flex items-center pb-12 font-medium lg:mb-1">
-              <input type="checkbox" name="checkbox" />
-              <span className="ml-4 inline-block cursor-pointer text-sm">
-                I agree with the{" "}
-                <a href="#" className="font-bold text-[#0b0b1f]">
-                  Terms & Conditions
-                </a>
-              </span>
-            </label>
+          <h1 className="text-blue-900 font-bold text-4xl font-sans mb-12">
+            Sistem Informasi Pemesanan Sparepart
+          </h1>
+          <form
+            className="mx-auto w-96 mb-4 max-w-sm pb-4"
+            onSubmit={handlerLogin}
+          >
+            <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                />
+              </svg>
+              <input
+                className="pl-2 outline-none border-none"
+                type="email"
+                name="email"
+                id=""
+                placeholder="Email"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex items-center border-2 py-2 px-3 rounded-2xl mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <input
+                className="pl-2 outline-none border-none"
+                type="password"
+                name="password"
+                id=""
+                placeholder="Password"
+                onChange={handleChange}
+              />
+            </div>
             <button
               type="submit"
-              className="group relative h-12 w-72 overflow-hidden rounded-2xl bg-cyan-600 text-lg font-bold text-white"
+              className="group relative h-12 w-96 overflow-hidden rounded-2xl bg-cyan-600 text-lg font-bold text-white"
             >
               Login
               <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
@@ -105,22 +129,24 @@ export default function Login() {
           </form>
           <p className="text-sm text-[#636262]">
             Dont have an account?{" "}
-            <a href="/register" className="text-sm font-bold text-black">
+            <Link href="/register" className="text-sm font-bold text-black">
               Register
-            </a>
+            </Link>
           </p>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center bg-[#f2f2f7]">
-        <div className="max-w-lg px-5 py-16 md:px-10 md:py-24 lg:py-32">
-          <p className="mb-8 text-[#647084] md:mb-12 lg:mb-16">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam,
-            purus sit amet luctus venenatis, lectus magna fringilla urna,
-            porttitor rhoncus dolor purus non enim.
-          </p>
-          <p className="font-bold">John Robert</p>
-          <p className="text-sm">Senior Webflow Developer</p>
+      <div className="relative overflow-hidden md:flex bg-gradient-to-tr from-cyan-600  to-cyan-700 i justify-around items-center hidden ">
+        <div>
+          <h1 className="text-white font-bold text-4xl font-sans">
+            Yamaha Sabang Raya
+            <br />
+            Motor Handil
+          </h1>
         </div>
+        <div className="absolute -bottom-32 -left-40 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+        <div className="absolute -bottom-40 -left-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+        <div className="absolute -top-40 -right-0 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
+        <div className="absolute -top-20 -right-20 w-80 h-80 border-4 rounded-full border-opacity-30 border-t-8"></div>
       </div>
     </div>
   );

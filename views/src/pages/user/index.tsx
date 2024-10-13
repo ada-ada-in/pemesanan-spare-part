@@ -28,7 +28,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const role = await GetRole(token);
 
-  if (role !== "admin") {
+  if (role !== "user") {
     return {
       redirect: {
         destination: "/wrong-role",

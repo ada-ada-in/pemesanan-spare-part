@@ -9,9 +9,9 @@ import {
 import express from "express";
 const router = express.Router();
 
-router.post("/register", verifyToken, register);
+router.post("/register", register);
 router.post("/login", login);
-router.delete("/logout", logout);
+router.delete("/logout", verifyToken, logout);
 router.get("/getrolewhenlogin", verifyToken, getRoleWhenLogin);
 
 export default router;

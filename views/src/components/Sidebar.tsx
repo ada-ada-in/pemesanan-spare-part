@@ -30,7 +30,12 @@ import Image from "next/image";
 
 const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
-  { name: "User", href: "/admin/user", icon: UsersIcon, current: false },
+  {
+    name: "Kota",
+    href: "/admin/kota",
+    icon: BuildingOffice2Icon,
+    current: false,
+  },
 ];
 
 function classNames(...classes: any[]) {
