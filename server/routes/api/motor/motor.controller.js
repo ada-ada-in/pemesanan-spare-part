@@ -1,4 +1,5 @@
 import * as allService from "../../../services/allService.js";
+import { toTitleCase } from "../../../utils/textCase.js";
 import ResponseHandler from "../../../utils/response.js";
 
 export const createMotor = async (req, res) => {
@@ -22,8 +23,10 @@ export const createMotor = async (req, res) => {
         "Motor with this name and year already exists in the data"
       );
     }
+    const formattedTitleCase = toTitleCase(motor_name);
+    console.log(formattedTitleCase);
     const createNewMotor = await allService.motorService.create({
-      motor_name,
+      motor_name: formattedTitleCase,
       tahun: parseInt(tahun),
     });
     return response.success201(createNewMotor);
@@ -54,6 +57,26 @@ export const deleteMotor = async (req, res) => {
       return response.fail404("Motor data not found");
     }
     return response.successDelete200("Deleted success");
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const updateMotor = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const { motor_name, tahun } = req.body;
+    const formatedMotorName = toTitleCase(motor_name);
+    const data = {
+      motor_name: formatedMotorName,
+      tahun: parseInt(tahun),
+    };
+    const updatedMotorData = allService.motorService.update(data, id);
+    if (!updatedMotorData) {
+      return response.fail400("Fail to update data");
+    }
+    return response.successUpdate200(data);
   } catch (error) {
     return response.fail500(error.message);
   }

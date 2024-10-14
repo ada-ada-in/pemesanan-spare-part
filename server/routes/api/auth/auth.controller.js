@@ -1,8 +1,12 @@
 import * as allService from "../../../services/allService.js";
+import jwt from "jsonwebtoken";
 import ResponseHandler from "../../../utils/response.js";
 import { encrypt } from "../../../utils/encrypt.js";
-import jwt from "jsonwebtoken";
 import { compare } from "../../../utils/compare.js";
+import {
+  toCapitalizeFirstWordCase,
+  toTitleCase,
+} from "../../../utils/textCase.js";
 import { tokenBlacklist } from "../../../utils/blacklist.js";
 
 export const register = async (req, res) => {
@@ -20,13 +24,15 @@ export const register = async (req, res) => {
     if (existingEmail) {
       return response.fail400("email has registered");
     }
+    const formattedName = toTitleCase(name);
+    const formattedAlamat = toCapitalizeFirstWordCase(alamat);
     const encryptedPassword = await encrypt(password);
     const registerUser = await allService.authService.create({
-      name,
+      name: formattedName,
       email,
       password: encryptedPassword,
       role,
-      alamat,
+      alamat: formattedAlamat,
       no_hp,
     });
     return response.success201(registerUser);

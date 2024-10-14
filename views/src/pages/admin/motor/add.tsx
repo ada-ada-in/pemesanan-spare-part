@@ -6,6 +6,7 @@ import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { GetRole } from "@/libs/manageRole";
 import { postData } from "@/libs/handlerData";
+import Link from "next/link";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -68,7 +69,21 @@ export default function TambahMotor({
 
   return (
     <Sidebar profile={profile}>
-      <h1 className="font-semibold text-lg">Tambah Data Motor</h1>
+      <div className="sm:flex sm:items-center">
+        <div className="sm:flex-auto">
+          <h1 className="text-base font-semibold leading-6 text-gray-900">
+            Tambah Data Motor
+          </h1>
+        </div>
+        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <Link
+            href={"/admin/motor"}
+            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Kembali
+          </Link>
+        </div>
+      </div>
       <div className="mt-10 space-y-8 pb-12 sm:space-y-0 sm:divide-gray-900/10 sm:pb-0">
         <form onSubmit={handlerSubmit}>
           <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">

@@ -24,6 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         destination: "/login",
       },
     };
+
   GetRole(token);
   const role = await GetRole(token);
 

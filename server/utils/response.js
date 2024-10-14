@@ -13,6 +13,16 @@ class ResponseHandler {
     });
   }
 
+  successUpdate200(data) {
+    this.res.status(200).json({
+      status: {
+        code: 200,
+        message: "Success: Data updated successfully",
+      },
+      data,
+    });
+  }
+
   successDelete200(data) {
     this.res.status(200).json({
       status: {

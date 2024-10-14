@@ -12,7 +12,7 @@ export default function Table({
   title: string;
   description: string;
   link: string;
-  data: any[]|null;
+  data: any[] | null;
   buttonOff?: boolean;
 }) {
   return (

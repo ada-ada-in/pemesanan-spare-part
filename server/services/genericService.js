@@ -121,12 +121,8 @@ export class GenericServices {
 
   async update(data, id) {
     try {
-      this.item = await this.model.update(data, {
-        where: { id: id },
-      });
-      if (updatedRows === 0) {
-        response.fail400("updated fails");
-      }
+      this.item = await this.model.findByPk(id);
+      await this.item.update(data);
       return this.item;
     } catch (error) {
       response.fail500(error);

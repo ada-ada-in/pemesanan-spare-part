@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../configs/database.js";
 import { v6 as uuidv6 } from "uuid";
+import { toTitleCase } from "../utils/textCase.js";
 
 class MotorModels extends Model {}
 
@@ -16,7 +17,7 @@ MotorModels.init(
       type: DataTypes.STRING(40),
       allowNull: false,
       set(value) {
-        this.setDataValue("motor_name", value.toLowerCase());
+        this.setDataValue("motor_name", toTitleCase(value));
       },
     },
     tahun: {
