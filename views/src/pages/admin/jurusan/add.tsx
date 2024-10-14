@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
-import { getData } from "@/libs/getdata";
+import { getData } from "@/libs/handlerData";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -62,7 +62,9 @@ export default function TambahJurusan({
         const year = originalDate.getFullYear();
         formattedDate = `${day}-${month}-${year}`;
       }
-      const nama = dataServer.kota.filter((kota: any) => kota.id === Number(data.kota_id))[0].nama_kota;
+      const nama = dataServer.kota.filter(
+        (kota: any) => kota.id === Number(data.kota_id)
+      )[0].nama_kota;
       const body = JSON.stringify({
         ...data,
         tanggal: formattedDate,

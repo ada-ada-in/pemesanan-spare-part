@@ -36,6 +36,12 @@ const navigations = [
     icon: BuildingOffice2Icon,
     current: false,
   },
+  {
+    name: "Motor",
+    href: "/admin/motor",
+    icon: BuildingOffice2Icon,
+    current: false,
+  },
 ];
 
 function classNames(...classes: any[]) {

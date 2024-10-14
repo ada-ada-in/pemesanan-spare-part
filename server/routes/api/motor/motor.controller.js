@@ -44,3 +44,17 @@ export const getMotor = async (req, res) => {
     return response.fail500(error.message);
   }
 };
+
+export const deleteMotor = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const deleteDataMotor = await allService.motorService.delete(id);
+    if (!deleteDataMotor) {
+      return response.fail404("Motor data not found");
+    }
+    return response.successDelete200("Deleted success");
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};

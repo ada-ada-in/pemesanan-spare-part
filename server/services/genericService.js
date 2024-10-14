@@ -107,10 +107,15 @@ export class GenericServices {
 
   async delete(id) {
     try {
-      this.item = await this.model.destroy(id);
+      this.item = await this.model.findOne({
+        where: {
+          id: id,
+        },
+      });
+      await this.item.destroy();
       return this.item;
     } catch (error) {
-      response.fail500(error);
+      response.fail500(error.message);
     }
   }
 

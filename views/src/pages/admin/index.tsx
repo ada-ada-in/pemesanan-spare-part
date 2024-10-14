@@ -5,7 +5,7 @@ import { GetServerSidePropsContext } from "next";
 import { Guard } from "@/libs/middleware";
 import { RadioGroup, Radio } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { getData } from "@/libs/getdata";
+import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
 import { redirect } from "next/dist/server/api-utils";
 

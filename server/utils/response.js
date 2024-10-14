@@ -13,6 +13,15 @@ class ResponseHandler {
     });
   }
 
+  successDelete200(data) {
+    this.res.status(200).json({
+      status: {
+        code: 200,
+        message: data,
+      },
+    });
+  }
+
   success201(data) {
     this.res.status(201).json({
       status: {

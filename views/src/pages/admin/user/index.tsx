@@ -3,7 +3,7 @@ import Sidebar from "@/components/Sidebar";
 import Table from "@/components/Table";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
-import { getData } from "@/libs/getdata";
+import { getData } from "@/libs/handlerData";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
