@@ -24,7 +24,6 @@ export const createMotor = async (req, res) => {
       );
     }
     const formattedTitleCase = toTitleCase(motor_name);
-    console.log(formattedTitleCase);
     const createNewMotor = await allService.motorService.create({
       motor_name: formattedTitleCase,
       tahun: parseInt(tahun),
