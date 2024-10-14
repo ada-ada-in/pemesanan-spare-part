@@ -50,10 +50,9 @@ export default function Register() {
   return (
     <div className="h-screen md:flex">
       <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-cyan-600  to-cyan-700 i justify-around items-center hidden">
-        Yamaha Sabang Raya{" "}
         <div>
           <h1 className="text-white font-bold text-4xl font-sans">
-            <br />
+            Yamaha Sabang Raya <br />
             Motor Handil
           </h1>
         </div>

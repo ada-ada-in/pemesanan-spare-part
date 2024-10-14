@@ -33,3 +33,26 @@ export async function postData(e: any, token: string, url: string, data: any) {
     console.error(`message : ${error}`);
   }
 }
+
+export async function updateData(token: string, url: string, data: any) {
+  try {
+    const request = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const response = await request.json();
+    if (response.status.code == 200) {
+      toast.success(response.status.message);
+    } else {
+      toast.error(response.status.message);
+    }
+    return response;
+  } catch (error: any) {
+    console.error(`message : ${error}`);
+  }
+}

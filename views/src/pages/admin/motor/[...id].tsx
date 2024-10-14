@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
-import { getData } from "@/libs/handlerData";
+import { getData, updateData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -37,11 +37,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       token,
       id,
       motor: dataMotor.data,
+      backendUrl,
     },
   };
 }
 
-export default function DetailMobil({
+export default function DetaiMotor({
   token,
   id,
   motor,
@@ -57,34 +58,19 @@ export default function DetailMobil({
     tahun: motor.tahun || "",
   });
 
-  async function handlerSubmit(e: any) {
+  const handlerSubmit = async (e: any) => {
     e.preventDefault();
-    try {
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      const response = await request.json();
-      if (response.status.code == 200) {
-        toast.success(response.status.message);
-        setTimeout(() => {
-          router.push("/admin/motor");
-        }, 1000);
-      } else {
-        toast.error(response.status.message);
-      }
-    } catch (error: any) {
-      console.error("Error:", error);
+    const response = await updateData(
+      token,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
+      data
+    );
+    if (response) {
+      setTimeout(() => {
+        router.push("/admin/motor");
+      });
     }
-  }
-
+  };
   function handleChange(e: any) {
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));

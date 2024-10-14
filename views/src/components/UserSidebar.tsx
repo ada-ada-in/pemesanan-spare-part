@@ -27,7 +27,7 @@ const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
   {
     name: "Motor",
-    href: "/admin/motor",
+    href: "/user/motor",
     icon: BuildingOffice2Icon,
     current: false,
   },
@@ -37,7 +37,7 @@ function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Sidebar({
+export default function UserSidebar({
   children,
   profile,
 }: {

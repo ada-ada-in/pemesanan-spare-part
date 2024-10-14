@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "@/components/Sidebar";
+import UserSidebar from "@/components/UserSidebar";
 import { guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { Guard } from "@/libs/middleware";
@@ -73,7 +73,7 @@ export default function Index({
   profile: any | null;
 }) {
   return (
-    <Sidebar profile={profile}>
+    <UserSidebar profile={profile}>
       <div className="w-full grid gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
         {/* {stats.map((stat: Stats, index: number) => ( */}
         <div
@@ -91,6 +91,6 @@ export default function Index({
         </div>
         {/* ))} */}
       </div>
-    </Sidebar>
+    </UserSidebar>
   );
 }
