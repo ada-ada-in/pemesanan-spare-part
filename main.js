@@ -16,9 +16,9 @@ const PORT = process.env.PORT || 8000;
 
 const start = async () => {
   try {
-    const database = await sequelize.sync();
+    // const database = await sequelize.sync();
     // on development
-    // const database = await sequelize.sync({ alter: true });
+    const database = await sequelize.sync({ alter: true });
     // force database
     // const database = await sequelize.sync({ force: true });
     if (!database) {

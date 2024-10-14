@@ -14,6 +14,7 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, confPassword, role, alamat, no_hp } =
       req.body;
+    console.log(req.body);
     if (password !== confPassword) {
       return response.fail400("password doesn't match");
     }

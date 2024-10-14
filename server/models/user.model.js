@@ -32,7 +32,7 @@ UsersModels.init(
         isEmail: true,
       },
       set(value) {
-        this.setDataValue("email"), toLowerCase(value);
+        this.setDataValue("email", toLowerCase(value));
       },
     },
     alamat: {

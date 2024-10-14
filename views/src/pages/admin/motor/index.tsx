@@ -158,7 +158,7 @@ export default function Index({
                     </td>
                     <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
                       <Link
-                        href={`/admin/kota`}
+                        href={`/admin/motor/${motor.id}`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         Edit<span className="sr-only">, kota name</span>

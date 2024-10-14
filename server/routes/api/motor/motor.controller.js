@@ -48,6 +48,20 @@ export const getMotor = async (req, res) => {
   }
 };
 
+export const getMotorById = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const getDataIdMotor = await allService.motorService.getDataById(id);
+    if (!getDataIdMotor) {
+      return response.fail400("fail to get motor data");
+    }
+    return response.success200(getDataIdMotor);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 export const deleteMotor = async (req, res) => {
   const response = new ResponseHandler(res);
   try {

@@ -43,6 +43,19 @@ export class GenericServices {
     }
   }
 
+  async getDataById(id) {
+    try {
+      this.item = await this.model.findOne({
+        where: {
+          id: id,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
   async getRoleWhenUserLogin(id) {
     try {
       this.item = await this.model.findOne({
