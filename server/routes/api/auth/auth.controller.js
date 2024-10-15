@@ -21,7 +21,10 @@ export const register = async (req, res) => {
     if (!email) {
       return response.fail400("please input email");
     }
-    const existingEmail = await allService.authService.getEmailOne(email);
+    const existingEmail = await allService.authService.getNameCheck(
+      "email",
+      email
+    );
     if (existingEmail) {
       return response.fail400("email has registered");
     }
@@ -42,13 +45,94 @@ export const register = async (req, res) => {
   }
 };
 
+export const getCountAccount = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const getAllUser = await allService.authService.getDataCount();
+    if (!getAllUser) {
+      return response.fail400("Cannot count all user");
+    }
+    return response.success200(getAllUser);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getAccount = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const getAllUser = await allService.authService.getData();
+    if (!getAllUser) {
+      return response.fail400("Cannot count all user");
+    }
+    return response.success200(getAllUser);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getUserById = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const getUserById = await allService.authService.getDataById(id);
+    if (!getUserById) {
+      return response.fail400("Cannot get user id");
+    }
+    return response.success200(getUserById);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const deleteAccount = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const deleteUser = await allService.authService.delete(id);
+    if (!deleteUser) {
+      return response.fail400("Cannot delete user");
+    }
+    return response.success200(deleteUser);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const updateAccount = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const { id } = req.params;
+  const { name, email, alamat, no_hp, role, password, confPassword } = req.body;
+  if (password !== confPassword) {
+    return response.fail400("Password doesn't match");
+  }
+  const encryptedPassword = await encrypt(password);
+  const data = {
+    name: name,
+    email: email,
+    alamat: alamat,
+    no_hp: parseInt(no_hp),
+    role: role,
+    password: encryptedPassword,
+  };
+  try {
+    const updatedAccount = await allService.authService.update(data, id);
+    if (!updatedAccount) {
+      return response.fail400("Cannot count all user");
+    }
+    return response.success201(updatedAccount);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 export const login = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
     const { email, password } = req.body;
-    const user = await allService.authService.getEmailOne(email);
+    const user = await allService.authService.getNameCheck("email", email);
     if (!user) {
-      return response.fail400("incorect email");
+      return response.fail400("incorect email or password");
     }
     const secretKey = process.env.SECRET_KEY;
     const payload = {

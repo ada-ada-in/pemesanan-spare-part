@@ -17,6 +17,19 @@ export class GenericServices {
     }
   }
 
+  async getDataByIdName(fieldName, fieldValue, model) {
+    try {
+      this.item = await this.model.findAll({
+        where: {
+          [fieldName]: fieldValue,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
   async getData() {
     try {
       this.item = await this.model.findAll({
@@ -37,6 +50,44 @@ export class GenericServices {
           updatedAt: formattedUpdatedDate,
         };
       });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getDataAndOtherModel(model = null) {
+    try {
+      this.item = await this.model.findAll({
+        order: [["createdAt", "DESC"]],
+        include: {
+          model: model,
+        },
+      });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getDataCount() {
+    try {
+      this.item = await this.model.count();
       return this.item;
     } catch (error) {
       response.fail500(error);
@@ -70,37 +121,11 @@ export class GenericServices {
     }
   }
 
-  async getEmailOne(email) {
+  async getNameCheck(fieldName, fieldValue) {
     try {
       this.item = await this.model.findOne({
         where: {
-          email: email,
-        },
-      });
-      return this.item;
-    } catch (error) {
-      response.fail500(error);
-    }
-  }
-
-  async getMotorNameCheck(data) {
-    try {
-      this.item = await this.model.findOne({
-        where: {
-          motor_name: data,
-        },
-      });
-      return this.item;
-    } catch (error) {
-      response.fail500(error);
-    }
-  }
-
-  async getMotorYearCheck(data) {
-    try {
-      this.item = await this.model.findOne({
-        where: {
-          tahun: data,
+          [fieldName]: fieldValue,
         },
       });
       return this.item;

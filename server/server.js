@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import AuthRouter from "./routes/api/auth/auth.routes.js";
 import MotorRouter from "./routes/api/motor/motor.routes.js";
+import SparePartRouter from "./routes/api/sparepart/sparepart.routes.js";
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use(express.json());
 // Route
 app.use(AuthRouter);
 app.use(MotorRouter);
+app.use(SparePartRouter);
 
 export default app;

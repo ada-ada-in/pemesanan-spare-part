@@ -17,8 +17,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   const id = context.params?.id;
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const [dataMotor] = await Promise.all([
-    getData(token, `${backendUrl}/motor/${id}`),
+  const [dataUser] = await Promise.all([
+    getData(token, `${backendUrl}/user/${id}`),
   ]);
   GetRole(token);
   const role = await GetRole(token);
@@ -36,8 +36,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       token,
       id,
-      motor: dataMotor.data,
-      backendUrl,
+      data: dataUser.data,
     },
   };
 }
@@ -45,29 +44,44 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function DetaiMotor({
   token,
   id,
-  motor,
+  sparePart,
 }: {
   token: string;
   id: number;
-  motor: any;
+  sparePart: any;
 }) {
   const router = useRouter();
 
   const [data, setData] = React.useState({
-    motor_name: motor.motor_name || "",
-    tahun: motor.tahun || "",
+    sparepart_name: sparePart.sparepart_name || "",
+    price: sparePart.price || "",
+    id_motor: sparePart.id_motor || "",
   });
+
+  const [dataMotor, setDataMotor] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchMotorData = async () => {
+      const response = await getData(
+        token,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor`
+      );
+      setDataMotor(response.data || []);
+    };
+
+    fetchMotorData();
+  }, [token]);
 
   const handlerSubmit = async (e: any) => {
     e.preventDefault();
     const response = await updateData(
       token,
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/sparepart/${id}`,
       data
     );
     if (response) {
       setTimeout(() => {
-        router.push("/admin/motor");
+        router.push("/admin/sparepart");
       });
     }
   };
@@ -95,7 +109,7 @@ export default function DetaiMotor({
                 id="motor_name"
                 autoComplete="given-name"
                 onChange={handleChange}
-                value={data.motor_name}
+                value={data.sparepart_name}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
               />
             </div>
@@ -114,9 +128,42 @@ export default function DetaiMotor({
                 id="tahun"
                 autoComplete="given-name"
                 onChange={handleChange}
-                value={data.tahun}
+                value={data.price}
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
               />
+            </div>
+          </div>
+          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
+            <label
+              htmlFor="nama_kota"
+              className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
+            >
+              Tipe Motor
+            </label>
+            <div className="mt-2 sm:col-span-2 sm:mt-0">
+              <select
+                name="id_motor"
+                id="id_motor"
+                autoComplete="given-name"
+                onChange={handleChange}
+                value={data.id_motor}
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+              >
+                <option value="" disabled>
+                  Pilih Motor
+                </option>
+                {dataMotor.length > 0 ? (
+                  dataMotor.map((motor) => (
+                    <option key={motor.id} value={motor.id}>
+                      {motor.motor_name}
+                    </option>
+                  ))
+                ) : (
+                  <option value="" disabled>
+                    Tidak ada motor tersedia
+                  </option>
+                )}
+              </select>
             </div>
           </div>
           <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">

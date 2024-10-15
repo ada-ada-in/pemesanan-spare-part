@@ -4,9 +4,11 @@ import http from "http";
 import express from "express";
 import { sequelize } from "./server/configs/database.js";
 import cors from "cors";
+import SparePartModels from "./server/models/sparePart.model.js";
 
 app.use(cors());
 app.use(express.json());
+app.use(SparePartModels);
 app.get("/", async (req, res, next) => {
   return res.send("Okeee");
 });
@@ -16,9 +18,9 @@ const PORT = process.env.PORT || 8000;
 
 const start = async () => {
   try {
-    // const database = await sequelize.sync();
+    const database = await sequelize.sync();
     // on development
-    const database = await sequelize.sync({ alter: true });
+    // const database = await sequelize.sync({ alter: true });
     // force database
     // const database = await sequelize.sync({ force: true });
     if (!database) {

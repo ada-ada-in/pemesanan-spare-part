@@ -26,8 +26,20 @@ import Image from "next/image";
 const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
   {
+    name: "User",
+    href: "/admin/user",
+    icon: BuildingOffice2Icon,
+    current: false,
+  },
+  {
     name: "Motor",
     href: "/admin/motor",
+    icon: BuildingOffice2Icon,
+    current: false,
+  },
+  {
+    name: "Spare Part",
+    href: "/admin/sparepart",
     icon: BuildingOffice2Icon,
     current: false,
   },

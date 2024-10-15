@@ -2,6 +2,19 @@ import * as allService from "../../../services/allService.js";
 import { toTitleCase } from "../../../utils/textCase.js";
 import ResponseHandler from "../../../utils/response.js";
 
+export const getCountMotor = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const getAllMotor = await allService.authService.getDataCount();
+    if (!getAllMotor) {
+      return response.fail400("Cannot count all motor");
+    }
+    return response.success200(getAllMotor);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 export const createMotor = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
@@ -12,10 +25,12 @@ export const createMotor = async (req, res) => {
     if (!tahun || tahun === null) {
       return response.fail400("Please insert year");
     }
-    const motorNameCheck = await allService.motorService.getMotorNameCheck(
+    const motorNameCheck = await allService.motorService.getNameCheck(
+      "motor_name",
       motor_name
     );
-    const yearMotorCheck = await allService.motorService.getMotorYearCheck(
+    const yearMotorCheck = await allService.motorService.getNameCheck(
+      "tahun",
       tahun
     );
     if (motorNameCheck && yearMotorCheck) {
