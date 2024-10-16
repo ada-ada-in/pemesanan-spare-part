@@ -24,12 +24,14 @@ CartModels.init(
       },
     },
     price_total: {
-      type: DataTypes.INTEGER(12),
+      type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     status: {
       type: DataTypes.ENUM(["inden", "sudah-datang", "lunas"]),
       allowNull: false,
+      defaultValue: "inden",
     },
   },
   {
@@ -38,11 +40,7 @@ CartModels.init(
   }
 );
 
-MotorModels.hasMany(CartModels, { foreignKey: "id_motor" });
-CartModels.belongsTo(MotorModels, { foreignKey: "id_motor" });
 UsersModels.hasMany(CartModels, { foreignKey: "id_user" });
 CartModels.belongsTo(UsersModels, { foreignKey: "id_user" });
-SparePartModels.hasMany(CartModels, { foreignKey: "id_sparepart" });
-CartModels.belongsTo(SparePartModels, { foreignKey: "id_sparepart" });
 
 export default CartModels;
