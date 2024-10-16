@@ -16,8 +16,11 @@ import {
   Bars3Icon,
   XMarkIcon,
   Cog6ToothIcon,
-  BuildingOffice2Icon,
   HomeIcon,
+  UserIcon,
+  WrenchIcon,
+  RocketLaunchIcon,
+  Cog8ToothIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
@@ -28,19 +31,19 @@ const navigations = [
   {
     name: "User",
     href: "/admin/user",
-    icon: BuildingOffice2Icon,
+    icon: UserIcon,
     current: false,
   },
   {
     name: "Motor",
     href: "/admin/motor",
-    icon: BuildingOffice2Icon,
+    icon: RocketLaunchIcon,
     current: false,
   },
   {
     name: "Spare Part",
     href: "/admin/sparepart",
-    icon: BuildingOffice2Icon,
+    icon: WrenchIcon,
     current: false,
   },
 ];
@@ -250,8 +253,7 @@ export default function Sidebar({
                         className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                         aria-hidden="true"
                       >
-                        {/* {profile.data.name} */}
-                        Profile
+                        <Cog6ToothIcon className="h-6 w-6 text-gray-500" />
                       </span>
                       <ChevronDownIcon
                         className="ml-2 h-5 w-5 text-gray-400"
@@ -263,6 +265,14 @@ export default function Sidebar({
                     transition
                     className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                   >
+                    <MenuItem>
+                      <Link
+                        href={"/admin/profile"}
+                        className="hover:bg-gray-50 w-full text-left block px-3 py-1 text-sm leading-6 text-gray-900"
+                      >
+                        Profile
+                      </Link>
+                    </MenuItem>
                     <MenuItem>
                       <button
                         onClick={handleLogout}

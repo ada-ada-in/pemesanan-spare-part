@@ -1,6 +1,5 @@
 import React from "react";
 import Sidebar from "@/components/Sidebar";
-import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";

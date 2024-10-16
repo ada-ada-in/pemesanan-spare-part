@@ -104,7 +104,11 @@ export const updateAccount = async (req, res) => {
   const { id } = req.params;
   const { name, email, alamat, no_hp, role, password, confPassword } = req.body;
   if (password !== confPassword) {
-    return response.fail400("Password doesn't match");
+    return response.fail400("password doesn't match");
+  }
+
+  if (password.trim() == "" && confPassword.trim() == "") {
+    return response.fail400("please insert password");
   }
   const encryptedPassword = await encrypt(password);
   const data = {
@@ -115,12 +119,13 @@ export const updateAccount = async (req, res) => {
     role: role,
     password: encryptedPassword,
   };
+
   try {
     const updatedAccount = await allService.authService.update(data, id);
     if (!updatedAccount) {
       return response.fail400("Cannot count all user");
     }
-    return response.success201(updatedAccount);
+    return response.success200(updatedAccount);
   } catch (error) {
     return response.fail500(error.message);
   }
