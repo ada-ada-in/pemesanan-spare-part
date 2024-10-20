@@ -119,11 +119,25 @@ export class GenericServices {
     } catch (error) {
       response.fail500(error);
     }
+    aaaaaaaaaa;
   }
 
   async getNameCheck(fieldName, fieldValue) {
     try {
       this.item = await this.model.findOne({
+        where: {
+          [fieldName]: fieldValue,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getPrimaryKeyCheck(fieldName, fieldValue) {
+    try {
+      this.item = await this.model.findByPk({
         where: {
           [fieldName]: fieldValue,
         },

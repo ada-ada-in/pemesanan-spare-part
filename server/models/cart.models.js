@@ -1,8 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../configs/database.js";
 import { v6 as uuidv6 } from "uuid";
-import MotorModels from "./motor.models.js";
-import SparePartModels from "./sparePart.model.js";
 import UsersModels from "./user.model.js";
 
 class CartModels extends Model {}

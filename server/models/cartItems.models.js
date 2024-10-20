@@ -30,6 +30,10 @@ CartItemsModels.init(
         key: "id",
       },
     },
+    qty: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,
