@@ -24,10 +24,16 @@ import Link from "next/link";
 import Image from "next/image";
 
 const navigations = [
-  { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
+  { name: "Dashboard", href: "/user", icon: HomeIcon, current: true },
   {
-    name: "Motor",
-    href: "/user/motor",
+    name: "Transaksi",
+    href: "/user/transaksi",
+    icon: BuildingOffice2Icon,
+    current: false,
+  },
+  {
+    name: "History",
+    href: "/user/history",
     icon: BuildingOffice2Icon,
     current: false,
   },

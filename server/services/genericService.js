@@ -17,7 +17,7 @@ export class GenericServices {
     }
   }
 
-  async getDataByIdName(fieldName, fieldValue, model) {
+  async getDataByIdName(fieldName, fieldValue) {
     try {
       this.item = await this.model.findAll({
         where: {

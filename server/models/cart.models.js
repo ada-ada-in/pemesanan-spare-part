@@ -31,6 +31,10 @@ CartModels.init(
       allowNull: false,
       defaultValue: "inden",
     },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,

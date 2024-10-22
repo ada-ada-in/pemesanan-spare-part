@@ -81,13 +81,30 @@ export const getSparePartById = async (req, res) => {
   }
 };
 
+export const getSparePartByHarga = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const getDataIdSparePart = await allService.sparePartService.getNameCheck(
+      "id",
+      id
+    );
+    if (!getDataIdSparePart) {
+      return response.fail400("fail to get price spare part");
+    }
+    return response.success200(getDataIdSparePart);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 export const getSparePartByMotorId = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
-    const { id_motor } = req.body;
+    const { id_motor } = req.params;
     const getDataIdSparePart =
       await allService.sparePartService.getDataByIdName("id_motor", id_motor);
-    if (!getDataIdSparePart) {
+    if (!getDataIdSparePart || getDataIdSparePart.length === 0) {
       return response.fail400("fail to get spare part data");
     }
     return response.success200(getDataIdSparePart);

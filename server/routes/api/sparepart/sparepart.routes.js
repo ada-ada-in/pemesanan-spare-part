@@ -3,6 +3,7 @@ import {
   createSparePart,
   getCountSparePart,
   getSparePartByMotorId,
+  getSparePartByHarga,
   getSparePart,
   getSparePartById,
   updateSparePart,
@@ -14,7 +15,8 @@ const router = express.Router();
 
 router.post("/sparepart", verifyToken, createSparePart);
 router.get("/sparepart", verifyToken, getSparePart);
-router.get("/sparepartbymotor", verifyToken, getSparePartByMotorId);
+router.get("/motor/:id_motor/sparepart", verifyToken, getSparePartByMotorId);
+router.get("/harga/:id/sparepart", verifyToken, getSparePartByHarga);
 router.get("/countsparepart", verifyToken, getCountSparePart);
 router.get("/sparepart/:id", verifyToken, getSparePartById);
 router.put("/sparepart/:id", verifyToken, updateSparePart);

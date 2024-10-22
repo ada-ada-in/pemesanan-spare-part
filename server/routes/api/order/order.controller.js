@@ -5,6 +5,7 @@ export const CreateOrder = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
     const { spareParts } = req.body;
+    console.log(req.body);
     const id = req.id;
     if (!Array.isArray(spareParts) || spareParts.length === 0) {
       return response.fail400("Please insert valid spare parts and quantities");

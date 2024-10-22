@@ -10,6 +10,17 @@ export async function getData(token: string, url: string) {
   return response;
 }
 
+export async function getDataAndModel(token: string, url: string, id: any) {
+  const request = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const response = await request.json();
+  return response;
+}
+
 export async function postData(e: any, token: string, url: string, data: any) {
   try {
     e.preventDefault();
