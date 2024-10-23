@@ -1,11 +1,11 @@
 import * as allService from "../../../services/allService.js";
 import ResponseHandler from "../../../utils/response.js";
+import SparePartModels from "../../../models/sparePart.model.js";
 
 export const CreateOrder = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
     const { spareParts } = req.body;
-    console.log(req.body);
     const id = req.id;
     if (!Array.isArray(spareParts) || spareParts.length === 0) {
       return response.fail400("Please insert valid spare parts and quantities");
@@ -13,9 +13,10 @@ export const CreateOrder = async (req, res) => {
     const cart = await allService.CartService.create({
       id_user: id,
     });
+    console.log(cart);
     let totalPrice = 0;
     for (const item of spareParts) {
-      const { id_sparepart, qty } = item;
+      const { id_sparepart, qty, harga } = item;
       if (!id_sparepart || id_sparepart.trim() === "") {
         return response.fail400("Please insert spare part ID");
       }
@@ -33,10 +34,12 @@ export const CreateOrder = async (req, res) => {
           `Cannot find spare part with ID: ${id_sparepart}`
         );
       }
+      const total = sparePart.price * qty;
       await allService.CartItemService.create({
         id_cart: cart.id,
         id_sparepart: id_sparepart,
         qty,
+        harga: total,
       });
 
       totalPrice += sparePart.price * qty;
@@ -46,6 +49,41 @@ export const CreateOrder = async (req, res) => {
     await cart.save();
 
     return response.success201(cart);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getOrderByUser = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const id = req.id;
+    const userOrder = await allService.CartService.getDataByIdName(
+      "id_user",
+      id
+    );
+    if (!userOrder) {
+      return response.fail400("cannot find order");
+    }
+    return response.success200(userOrder);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getOrderByCartItem = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id_cart } = req.params;
+    const userItem = await allService.CartItemService.getDataCartItem(
+      "id_cart",
+      id_cart,
+      SparePartModels
+    );
+    if (!userItem) {
+      return response.fail400("cannot find order");
+    }
+    return response.success200(userItem);
   } catch (error) {
     return response.fail500(error.message);
   }

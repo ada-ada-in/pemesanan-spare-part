@@ -31,12 +31,6 @@ const navigations = [
     icon: BuildingOffice2Icon,
     current: false,
   },
-  {
-    name: "History",
-    href: "/user/history",
-    icon: BuildingOffice2Icon,
-    current: false,
-  },
 ];
 
 function classNames(...classes: any[]) {

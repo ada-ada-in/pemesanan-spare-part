@@ -34,6 +34,10 @@ CartItemsModels.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    harga: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   },
   {
     sequelize,

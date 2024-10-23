@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.imageContainer {
+  width: auto;
+  height: auto;
+}
+
+.customImage {
+  object-fit: contain;
+  width: 1000px;
+  height: 100%;
+}

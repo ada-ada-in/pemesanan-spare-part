@@ -24,6 +24,50 @@ export class GenericServices {
           [fieldName]: fieldValue,
         },
       });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getDataCartItem(fieldName, fieldValue, model1) {
+    try {
+      this.item = await this.model.findAll({
+        where: {
+          [fieldName]: fieldValue,
+        },
+        include: { model: model1, as: "sparepart" },
+      });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
       return this.item;
     } catch (error) {
       response.fail500(error);

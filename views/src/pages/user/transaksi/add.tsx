@@ -44,7 +44,6 @@ export default function TambahMotor({
     id_motor: "",
     id_sparepart: "",
   });
-  console.log("losss" + catchData);
 
   const [dataMotor, setDataMotor] = React.useState<any[]>([]);
   const [dataSparePart, setDataSparePart] = React.useState<any[]>([]);
@@ -55,24 +54,31 @@ export default function TambahMotor({
   // State to hold the cart items
   const [cart, setCart] = React.useState<any[]>([]);
   const [data, setData] = React.useState<any>({
-    spareParts: [cart],
+    spareParts: [],
   });
-  console.log(data);
 
   const handlerSubmit = async (e: any) => {
     e.preventDefault();
 
     // Add the current item to the cart
-    setCart((prevCart) => [
-      ...prevCart,
-      {
-        motor_name: dataMotor.find((motor) => motor.id === idMotor)?.motor_name,
-        sparepart_name: dataSparePart.find((spare) => spare.id === idSparepart)
-          ?.sparepart_name,
-        qty: catchData.qty,
-        price: harga?.price || 0,
-      },
-    ]);
+    const newCartItem = {
+      id_sparepart: idSparepart,
+      qty: catchData.qty,
+    };
+
+    setCart((prevCart) => {
+      const updatedCart = [...prevCart, newCartItem];
+
+      // Update the data state with the new cart
+      setData({
+        spareParts: updatedCart.map((item) => ({
+          id_sparepart: item.id_sparepart,
+          qty: parseInt(item.qty),
+        })),
+      });
+
+      return updatedCart;
+    });
   };
 
   React.useEffect(() => {
@@ -138,14 +144,17 @@ export default function TambahMotor({
     );
     if (response) {
       setTimeout(() => {
-        router.push("/user/transaksi/add");
-      });
+        router.push("/user/transaksi");
+      }, 1500);
     }
   }
 
   // Calculate total quantity and price
   const totalQty = cart.reduce((acc, item) => acc + parseInt(item.qty || 0), 0);
-  const totalPrice = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + (harga.price || 0) * item.qty,
+    0
+  );
 
   return (
     <UserSidebar profile={profile}>
@@ -157,7 +166,7 @@ export default function TambahMotor({
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <Link
-            href={"/admin/motor"}
+            href={"/user/transaksi"}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Kembali
@@ -177,6 +186,7 @@ export default function TambahMotor({
               </label>
               <div className="mt-2 sm:col-span-2 sm:mt-0">
                 <select
+                  required
                   name="id_motor"
                   id="id_motor"
                   value={catchData.id_motor}
@@ -204,6 +214,7 @@ export default function TambahMotor({
               </label>
               <div className="mt-2 sm:col-span-2 sm:mt-0">
                 <select
+                  required
                   name="id_sparepart"
                   id="sparepart"
                   onChange={handleChange}
@@ -246,7 +257,7 @@ export default function TambahMotor({
                 htmlFor="qty"
                 className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
               >
-                Quantity
+                Qty
               </label>
               <div className="mt-2 sm:col-span-2 sm:mt-0">
                 <input
@@ -254,50 +265,48 @@ export default function TambahMotor({
                   name="qty"
                   id="qty"
                   required
-                  value={catchData.qty}
                   onChange={handleChange}
+                  value={catchData.qty}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
 
-            <div className="sm:flex sm:items-center">
+            <div className="py-3">
               <button
                 type="submit"
-                className="mt-4 w-full inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto"
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded"
               >
-                Masukan Keranjang
+                Tambahkan ke Keranjang
               </button>
             </div>
           </form>
         </div>
 
-        <div className="w-1/3 p-4 bg-gray-100 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold mb-4">Cart</h2>
-          <ul className="space-y-2">
+        {/* Cart Summary */}
+        <div className="w-1/3">
+          <h3 className="text-lg font-medium">Keranjang</h3>
+          <ul className="mt-4 space-y-2">
             {cart.map((item, index) => (
-              <li key={index} className="flex justify-between border-b pb-2">
-                <span>{item.sparepart_name}</span>
+              <li key={index} className="flex justify-between items-center">
                 <span>
-                  {item.qty} x Rp{item.price}
+                  {dataSparePart.find((s) => s.id === item.id_sparepart)
+                    ?.sparepart_name || "Spare Part"}{" "}
+                  - Qty: {item.qty}
                 </span>
               </li>
             ))}
           </ul>
-
           <div className="mt-4">
-            <p className="font-semibold">Total Quantity: {totalQty}</p>
-            <p className="font-semibold">Total Price: Rp{totalPrice}</p>
+            <p>Total Qty: {totalQty}</p>
+            <p>Total Price: Rp {totalPrice.toLocaleString()}</p>
           </div>
-          <div className="sm:flex sm:items-center">
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className="mt-4 w-full inline-flex justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto"
-            >
-              Pesan
-            </button>
-          </div>
+          <button
+            onClick={handleSubmit}
+            className="mt-6 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded"
+          >
+            Buat Pesanan
+          </button>
         </div>
       </div>
     </UserSidebar>
