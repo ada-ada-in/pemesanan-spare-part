@@ -6,6 +6,7 @@ import SparePartRouter from "./routes/api/sparepart/sparepart.routes.js";
 import OrderRouter from "./routes/api/order/order.routes.js";
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 const corsOptions = {
   origin: "http://localhost:3000",

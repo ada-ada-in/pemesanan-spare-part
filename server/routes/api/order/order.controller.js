@@ -88,3 +88,22 @@ export const getOrderByCartItem = async (req, res) => {
     return response.fail500(error.message);
   }
 };
+
+export const uploadImage = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const filename = req.file.filename;
+    const { id } = req.params;
+    console.log(req.params);
+    const data = {
+      image: filename,
+    };
+    const updatedImage = await allService.CartService.update(data, id);
+    if (!updatedImage) {
+      return response.fail400("Fail to update data");
+    }
+    return response.successUpdate200(data);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
