@@ -67,3 +67,28 @@ export async function updateData(token: string, url: string, data: any) {
     console.error(`message : ${error}`);
   }
 }
+
+export async function updateImage(token: string, url: string, file: File) {
+  const formData = new FormData();
+  formData.append("image", file);
+  try {
+    const request = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const response = await request.json();
+    if (response.status.code == 200) {
+      toast.success(response.status.message);
+    } else {
+      toast.error(response.status.message);
+    }
+    return response;
+  } catch (error: any) {
+    console.error(`message : ${error}`);
+  }
+}

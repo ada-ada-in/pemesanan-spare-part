@@ -3,7 +3,7 @@ import UserSidebar from "@/components/UserSidebar";
 import { useRouter } from "next/router";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
-import { getData, updateData } from "@/libs/handlerData";
+import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
 import FileUploader from "../../../components/FileUploader";
 
@@ -63,27 +63,6 @@ export default function DetaiMotor({
     (total: number, item: any) => total + item.harga,
     0
   );
-
-  console.log(cartItem);
-
-  const handlerSubmit = async (e: any) => {
-    e.preventDefault();
-    const response = await updateData(
-      token,
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
-      data
-    );
-    if (response) {
-      setTimeout(() => {
-        router.push("/admin/motor");
-      });
-    }
-  };
-
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setData((prevData) => ({ ...prevData, [name]: value }));
-  };
 
   return (
     <UserSidebar>
@@ -160,7 +139,11 @@ export default function DetaiMotor({
             </tr>
           </tbody>
         </table>
-        <FileUploader />
+        <FileUploader
+          token={token}
+          id={id}
+          uploadUrl={`${process.env.NEXT_PUBLIC_BACKEND_URL}/upload`}
+        />
       </div>
     </UserSidebar>
   );

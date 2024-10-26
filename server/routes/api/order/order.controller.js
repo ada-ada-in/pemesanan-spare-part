@@ -13,7 +13,6 @@ export const CreateOrder = async (req, res) => {
     const cart = await allService.CartService.create({
       id_user: id,
     });
-    console.log(cart);
     let totalPrice = 0;
     for (const item of spareParts) {
       const { id_sparepart, qty, harga } = item;
@@ -94,9 +93,10 @@ export const uploadImage = async (req, res) => {
   try {
     const filename = req.file.filename;
     const { id } = req.params;
-    console.log(req.params);
+    const status = "inden";
     const data = {
       image: filename,
+      status: status,
     };
     const updatedImage = await allService.CartService.update(data, id);
     if (!updatedImage) {

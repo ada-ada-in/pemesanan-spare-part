@@ -1,32 +1,66 @@
-import { useState } from "react";
-import { postData } from "@/libs/handlerData";
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import { toast } from "react-hot-toast";
+import Image from "next/image";
 
-export default function FileUploader(url: any) {
-  const [uploadStatus, setUploadStatus] = useState("");
+interface FileUploaderProps {
+  token: string;
+  id: string | number;
+  uploadUrl: string;
+}
 
-  const handleFileChange = (event: any) => {
-    const file = event.target.files[0];
-    if (file) {
-      const validTypes = [
-        "image/png",
-        "image/jpeg",
-        "image/jpg",
-        "application/pdf",
-      ];
-      if (validTypes.includes(file.type)) {
-        setUploadStatus("Upload Successful!");
-      } else {
-        setUploadStatus(
-          "Invalid file type. Please upload a .png, .jpeg, .jpg, or .pdf file."
-        );
-      }
+export default function FileUploader({
+  token,
+  id,
+  uploadUrl,
+}: FileUploaderProps) {
+  const router = useRouter();
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setImagePreview(URL.createObjectURL(selectedFile));
+      setUploadStatus(null);
     }
   };
 
-  const handleClick = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!file) {
+      toast.error("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
     try {
-    } catch (error) {}
+      const response = await fetch(`${uploadUrl}/${id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        toast.success("Image uploaded successfully!");
+        setUploadStatus("Upload Successful!");
+        router.push("/user/transaksi");
+      } else {
+        toast.error(result?.message || "Failed to upload image.");
+        setUploadStatus("Upload Failed.");
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast.error("Error uploading file.");
+      setUploadStatus("Upload Failed.");
+    }
   };
 
   return (
@@ -41,12 +75,13 @@ export default function FileUploader(url: any) {
           </p>
         </div>
         <form
-          action="#"
+          onSubmit={handleSubmit}
           className="relative w-4/5 h-32 max-w-xs mb-10 bg-white bg-gray-100 rounded-lg shadow-inner"
         >
           <input
             type="file"
             id="file-upload"
+            accept="image/png, image/jpeg, image/jpg, application/pdf"
             className="hidden"
             onChange={handleFileChange}
           />
@@ -55,7 +90,7 @@ export default function FileUploader(url: any) {
             className="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer"
           >
             <p className="z-10 text-xs font-light text-center text-gray-500">
-              Drag & Drop your files here
+              Drag & Drop your files here or click to browse
             </p>
             <svg
               className="z-10 w-8 h-8 text-indigo-400"
@@ -70,7 +105,7 @@ export default function FileUploader(url: any) {
         {uploadStatus && (
           <p
             className={`mt-4 text-sm font-medium ${
-              uploadStatus.includes("Successful")
+              uploadStatus === "Upload Successful!"
                 ? "text-green-500"
                 : "text-red-500"
             }`}
@@ -78,11 +113,21 @@ export default function FileUploader(url: any) {
             {uploadStatus}
           </p>
         )}
-        {uploadStatus === "Upload Successful!" && (
-          <button className="mt-4 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none">
-            Submit
-          </button>
+        {imagePreview && (
+          <Image
+            src={imagePreview}
+            alt="Image Preview"
+            width={128}
+            height={128}
+            className="mt-4 w-32 h-32 object-cover"
+          />
         )}
+        <button
+          onClick={handleSubmit}
+          className="mt-4 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none"
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

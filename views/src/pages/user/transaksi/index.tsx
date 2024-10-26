@@ -11,7 +11,6 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { getData } from "@/libs/handlerData";
@@ -26,9 +25,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
 
-  GetRole(token);
   const role = await GetRole(token);
-
   if (role !== "user") {
     return {
       redirect: {
@@ -37,10 +34,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   const [dataTransaksi] = await Promise.all([
-    getData(token, `${backendUrl}/userorder `),
+    getData(token, `${backendUrl}/userorder`),
   ]);
+
   return {
     props: {
       token,
@@ -61,14 +60,11 @@ export default function Index({
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const [openImage, setOpenImage] = React.useState(false);
-  const [id, setId] = React.useState();
-  const [motorName, setMotorName] = React.useState();
-  const [tahun, setTahun] = React.useState();
+  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+
   async function handlerDeleteModal(e: any, id: any) {
     e.preventDefault();
     setOpen(true);
-    setOpenImage(true);
-    setId(id);
     try {
       const request = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
@@ -99,8 +95,7 @@ export default function Index({
       <UserSidebar profile={profile}>
         <Table
           title="Transaksi"
-          description="Management data transaksi pada Yamaha Sabang Raya
-        Motor Handil."
+          description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
           link="/user/transaksi/add"
           data={data}
         >
@@ -108,59 +103,37 @@ export default function Index({
             <thead className="bg-gray-50">
               <tr>
                 <th
-                  scope="col"
                   className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                   hidden
                 >
                   ID Kota
                 </th>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                >
+                <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                   No
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Nomor Transaksi
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Total Harga
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Status
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Image
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Tanggal
                 </th>
-                <th
-                  scope="col"
-                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                >
+                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Action
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
               {data &&
-                data.map((transaksi: any, number) => (
+                data.map((transaksi: any, index) => (
                   <tr key={transaksi.id}>
                     <td
                       className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
@@ -169,7 +142,7 @@ export default function Index({
                       {transaksi.id}
                     </td>
                     <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
-                      {number + 1}
+                      {index + 1}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {transaksi.transaksi_number}
@@ -178,35 +151,36 @@ export default function Index({
                       {transaksi.price_total}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      {transaksi.status === "belum-bayar" ? (
-                        <span className="bg-red-500 text-white p-3">
-                          Belum Bayar
-                        </span>
-                      ) : transaksi.status === "inden" ? (
-                        <span className="bg-orange-500 text-white p-3">
-                          Inden
-                        </span>
-                      ) : transaksi.status === "sudah-datang" ? (
-                        <span className="bg-blue-500 text-white p-3">
-                          Sudah Sampai
-                        </span>
-                      ) : transaksi.status === "lunas" ? (
-                        <span className="bg-green-500 text-white p-3">
-                          Lunas
-                        </span>
-                      ) : (
-                        <span className="bg-gray-500 text-white p-3">
-                          Unknown Status
-                        </span>
-                      )}
+                      <span
+                        className={`bg-${
+                          transaksi.status === "belum-bayar"
+                            ? "red"
+                            : transaksi.status === "inden"
+                            ? "orange"
+                            : transaksi.status === "sudah-datang"
+                            ? "blue"
+                            : "green"
+                        }-500 text-white p-3`}
+                      >
+                        {transaksi.status === "belum-bayar"
+                          ? "Belum Bayar"
+                          : transaksi.status === "inden"
+                          ? "Inden"
+                          : transaksi.status === "sudah-datang"
+                          ? "Sudah Sampai"
+                          : "Lunas"}
+                      </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {transaksi.image ? (
                         <button
-                          onClick={() => setOpenImage(true)}
+                          onClick={() => {
+                            setOpenImage(true);
+                            setSelectedImage(transaksi.image);
+                          }}
                           className="text-blue-500 underline"
                         >
-                          buktipembayaran.jpg
+                          Lihat Gambar
                         </button>
                       ) : (
                         "Belum ada bukti pembayaran"
@@ -223,56 +197,60 @@ export default function Index({
                         Detail
                       </Link>
                     </td>
-                    <Dialog
-                      className="relative z-50"
-                      open={openImage}
-                      onClose={setOpenImage}
-                    >
-                      <DialogBackdrop
-                        transition
-                        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
-                      />
-                      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                          <DialogPanel
-                            transition
-                            className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
-                          >
-                            <div className="sm:flex sm:items-start">
-                              <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                <DialogTitle
-                                  as="h1"
-                                  className="text-base font-semibold leading-6 text-gray-900"
-                                >
-                                  Bukti Pembayaran
-                                </DialogTitle>
-                                <div className="imageContainer">
-                                  <Image
-                                    className="customImage"
-                                    src="/images/author.png"
-                                    width={3000}
-                                    height={3000}
-                                    alt="Picture of the author"
-                                  />
-                                </div>
-                                <div className="mt-3 space-x-3">
-                                  <button
-                                    className="bg-cyan-600 py-2 px-3 text-white rounded-md"
-                                    onClick={() => setOpenImage(false)}
-                                  >
-                                    Kembali
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </DialogPanel>
-                        </div>
-                      </div>
-                    </Dialog>
                   </tr>
                 ))}
             </tbody>
           </table>
+
+          {/* Modal for Image */}
+          <Dialog
+            className="relative z-50"
+            open={openImage}
+            onClose={() => setOpenImage(false)}
+          >
+            <DialogBackdrop
+              transition
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <DialogPanel
+                  transition
+                  className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl"
+                >
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                      <DialogTitle
+                        as="h1"
+                        className="text-base font-semibold leading-6 text-gray-900"
+                      >
+                        Bukti Pembayaran
+                      </DialogTitle>
+                      {selectedImage && (
+                        <div className="imageContainer">
+                          <Image
+                            className="customImage"
+                            src={`/images/${selectedImage}`}
+                            width={1200}
+                            height={1200}
+                            alt="Bukti Pembayaran"
+                          />
+                        </div>
+                      )}
+                      <div className="mt-3 space-x-3">
+                        <button
+                          className="bg-cyan-600 py-2 px-3 text-white rounded-md"
+                          onClick={() => setOpenImage(false)}
+                        >
+                          Kembali
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </div>
+            </div>
+          </Dialog>
         </Table>
       </UserSidebar>
     </>

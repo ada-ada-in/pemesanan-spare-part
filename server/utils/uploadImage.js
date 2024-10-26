@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 // Membuat penyimpanan multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, "../../public/images");
+    const dir = path.join(__dirname, "../../views/public/images");
     cb(null, dir);
   },
   filename: (req, file, cb) => {
