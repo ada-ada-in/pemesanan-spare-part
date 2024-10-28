@@ -2,6 +2,7 @@ import * as allService from "../../../services/allService.js";
 import ResponseHandler from "../../../utils/response.js";
 import SparePartModels from "../../../models/sparePart.model.js";
 import UsersModels from "../../../models/user.model.js";
+import { Op } from "sequelize";
 
 // USER
 
@@ -122,6 +123,25 @@ export const getOrderByProses = async (req, res) => {
     const prosesItem = await allService.CartService.getDataByIdName(
       "isPaid",
       diproses,
+      UsersModels
+    );
+    if (!prosesItem) {
+      return response.fail400("cannot find data with diproses");
+    }
+    return response.success200(prosesItem);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getOrderTransaksi = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const lunas = "lunas";
+    const bayarSebagian = "bayar-sebagian";
+    const prosesItem = await allService.CartService.getDataByIdName(
+      "isPaid",
+      { [Op.in]: [lunas, bayarSebagian] },
       UsersModels
     );
     if (!prosesItem) {

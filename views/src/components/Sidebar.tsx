@@ -41,8 +41,8 @@ const navigations = [
     current: false,
   },
   {
-    name: "Bayar Sebagian",
-    href: "/admin/pembayarantertunda",
+    name: "Transaksi",
+    href: "/admin/transaksi",
     icon: RocketLaunchIcon,
     current: false,
   },
