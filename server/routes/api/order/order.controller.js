@@ -63,7 +63,8 @@ export const getOrderByUser = async (req, res) => {
     const id = req.id;
     const userOrder = await allService.CartService.getDataByIdName(
       "id_user",
-      id
+      id,
+      UsersModels
     );
     if (!userOrder) {
       return response.fail400("cannot find order");

@@ -103,7 +103,10 @@ export const getSparePartByMotorId = async (req, res) => {
   try {
     const { id_motor } = req.params;
     const getDataIdSparePart =
-      await allService.sparePartService.getDataByIdName("id_motor", id_motor);
+      await allService.sparePartService.getSparePartByMotor(
+        "id_motor",
+        id_motor
+      );
     if (!getDataIdSparePart || getDataIdSparePart.length === 0) {
       return response.fail400("fail to get spare part data");
     }

@@ -17,6 +17,34 @@ export class GenericServices {
     }
   }
 
+  async getSparePartByMotor(fieldName, fieldValue, model) {
+    try {
+      this.item = await this.model.findAll({
+        where: {
+          [fieldName]: fieldValue,
+        },
+      });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
   async getDataByIdName(fieldName, fieldValue, model) {
     try {
       this.item = await this.model.findAll({
