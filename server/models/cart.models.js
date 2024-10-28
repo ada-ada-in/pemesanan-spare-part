@@ -32,10 +32,20 @@ CartModels.init(
       allowNull: false,
       defaultValue: 0,
     },
-    status: {
-      type: DataTypes.ENUM(["belum-bayar", "inden", "sudah-datang", "lunas"]),
+    isPaid: {
+      type: DataTypes.ENUM([
+        "belum-bayar",
+        "diproses",
+        "bayar-sebagian",
+        "lunas",
+      ]),
       allowNull: false,
       defaultValue: "belum-bayar",
+    },
+    isStatus: {
+      type: DataTypes.ENUM(["inden", "sudah-datang", "bayar-telebih-dahulu"]),
+      allowNull: false,
+      defaultValue: "bayar-telebih-dahulu",
     },
     image: {
       type: DataTypes.STRING,

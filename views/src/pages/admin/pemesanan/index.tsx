@@ -95,10 +95,10 @@ export default function Index({
     <>
       <Sidebar profile={profile}>
         <Table
-          title="Spare Part"
+          title="Pesanan"
           description="Management data spare part pada Yamaha Sabang Raya
         Motor Handil."
-          link="/admin/sparepart/add"
+          link="/admin/pemesanan/add"
           data={data}
         >
           <table className="min-w-full divide-y divide-gray-300">

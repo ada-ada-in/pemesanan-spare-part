@@ -29,21 +29,33 @@ import Image from "next/image";
 const navigations = [
   { name: "Dashboard", href: "/admin", icon: HomeIcon, current: true },
   {
-    name: "User",
-    href: "/admin/user",
-    icon: UserIcon,
-    current: false,
-  },
-  {
     name: "Motor",
     href: "/admin/motor",
     icon: RocketLaunchIcon,
     current: false,
   },
   {
-    name: "Spare Part",
-    href: "/admin/sparepart",
+    name: "Diproses",
+    href: "/admin/diproses",
+    icon: RocketLaunchIcon,
+    current: false,
+  },
+  {
+    name: "Bayar Sebagian",
+    href: "/admin/pembayarantertunda",
+    icon: RocketLaunchIcon,
+    current: false,
+  },
+  {
+    name: "Pemesanan",
+    href: "/admin/pemesanan",
     icon: WrenchIcon,
+    current: false,
+  },
+  {
+    name: "User",
+    href: "/admin/user",
+    icon: UserIcon,
     current: false,
   },
 ];

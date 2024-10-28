@@ -17,12 +17,13 @@ export class GenericServices {
     }
   }
 
-  async getDataByIdName(fieldName, fieldValue) {
+  async getDataByIdName(fieldName, fieldValue, model) {
     try {
       this.item = await this.model.findAll({
         where: {
           [fieldName]: fieldValue,
         },
+        include: { model: model || null, as: "user" },
       });
       this.item = this.item.map((record) => {
         const formattedDate = record.createdAt
@@ -171,6 +172,23 @@ export class GenericServices {
       this.item = await this.model.findOne({
         where: {
           [fieldName]: fieldValue,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
+  async getNameCheckWithModels(fieldName, fieldValue, model) {
+    try {
+      this.item = await this.model.findOne({
+        where: {
+          [fieldName]: fieldValue,
+        },
+        include: {
+          model: model,
+          as: "user",
         },
       });
       return this.item;

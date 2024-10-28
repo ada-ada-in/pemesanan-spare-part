@@ -1,5 +1,5 @@
 import React from "react";
-import UserSidebar from "@/components/UserSidebar";
+import Sidebar from "@/components/Sidebar";
 import Table from "@/components/Table";
 import Link from "next/link";
 import Image from "next/image";
@@ -24,7 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   const role = await GetRole(token);
-  if (role !== "user") {
+  if (role !== "admin") {
     return {
       redirect: {
         destination: "/wrong-role",
@@ -33,13 +33,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  const [dataTransaksi] = await Promise.all([
-    getData(token, `${backendUrl}/userorder`),
-  ]);
+  const [proses] = await Promise.all([getData(token, `${backendUrl}/proses`)]);
   return {
     props: {
       token,
-      data: dataTransaksi.data,
+      data: proses.data,
     },
   };
 }
@@ -86,7 +84,7 @@ export default function Index({
   }
   return (
     <>
-      <UserSidebar profile={profile}>
+      <Sidebar profile={profile}>
         <Table
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
@@ -104,6 +102,9 @@ export default function Index({
                 </th>
                 <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                   No
+                </th>
+                <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                  Nama
                 </th>
                 <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                   Nomor Transaksi
@@ -140,6 +141,9 @@ export default function Index({
                     </td>
                     <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
                       {index + 1}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                      {transaksi.user.name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {transaksi.transaksi_number}
@@ -205,7 +209,7 @@ export default function Index({
                     </td>
                     <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
                       <Link
-                        href={`/user/transaksi/${transaksi.id}`}
+                        href={`/admin/diproses/${transaksi.id}`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         Detail
@@ -265,7 +269,7 @@ export default function Index({
             </div>
           </Dialog>
         </Table>
-      </UserSidebar>
+      </Sidebar>
     </>
   );
 }

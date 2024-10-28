@@ -1,6 +1,9 @@
 import * as allService from "../../../services/allService.js";
 import ResponseHandler from "../../../utils/response.js";
 import SparePartModels from "../../../models/sparePart.model.js";
+import UsersModels from "../../../models/user.model.js";
+
+// USER
 
 export const CreateOrder = async (req, res) => {
   const response = new ResponseHandler(res);
@@ -93,10 +96,88 @@ export const uploadImage = async (req, res) => {
   try {
     const filename = req.file.filename;
     const { id } = req.params;
-    const status = "inden";
+    const isStatus = "inden";
+    const isPaid = "diproses";
     const data = {
       image: filename,
-      status: status,
+      isStatus: isStatus,
+      isPaid: isPaid,
+    };
+    const updatedImage = await allService.CartService.update(data, id);
+    if (!updatedImage) {
+      return response.fail400("Fail to update data");
+    }
+    return response.successUpdate200(data);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+//  ADMIN
+
+export const getOrderByProses = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const diproses = "diproses";
+    const prosesItem = await allService.CartService.getDataByIdName(
+      "isPaid",
+      diproses,
+      UsersModels
+    );
+    if (!prosesItem) {
+      return response.fail400("cannot find data with diproses");
+    }
+    return response.success200(prosesItem);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getOrderId = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const orderId = await allService.CartService.getNameCheckWithModels(
+      "id",
+      id,
+      UsersModels
+    );
+    if (!orderId) {
+      return response.fail400("cannot find data with diproses");
+    }
+    return response.success200(orderId);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getOrderProsesById = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id_cart } = req.params;
+    console.log(req.params);
+    const findOrderById = await allService.CartItemService.getDataCartItem(
+      "id_cart",
+      id_cart,
+      SparePartModels
+    );
+    if (!findOrderById) {
+      return response.fail400("Fail to update data");
+    }
+    return response.successUpdate200(findOrderById);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const updateTransaksi = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const { isStatus, isPaid } = req.body;
+    const data = {
+      isStatus: isStatus,
+      isPaid: isPaid,
     };
     const updatedImage = await allService.CartService.update(data, id);
     if (!updatedImage) {
