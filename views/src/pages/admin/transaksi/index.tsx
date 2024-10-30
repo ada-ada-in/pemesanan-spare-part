@@ -56,6 +56,25 @@ export default function Index({
   const [open, setOpen] = React.useState(false);
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [startDate, setStartDate] = React.useState("");
+  const [endDate, setEndDate] = React.useState("");
+  const [filteredData, setFilteredData] = React.useState(data);
+
+  React.useEffect(() => {
+    // Filtering logic based on date input
+    if (startDate && endDate && data) {
+      const filtered = data.filter((transaksi) => {
+        const transactionDate = new Date(transaksi.createdAt);
+        return (
+          transactionDate >= new Date(startDate) &&
+          transactionDate <= new Date(endDate)
+        );
+      });
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(data); // Reset if no dates are selected
+    }
+  }, [startDate, endDate, data]);
 
   async function handlerDeleteModal(e: any, id: any) {
     e.preventDefault();
@@ -91,8 +110,24 @@ export default function Index({
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
           link="/user/transaksi/add"
-          data={data}
+          data={filteredData}
         >
+          <div className="flex gap-4 mb-4">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border rounded p-2"
+              placeholder="Start Date"
+            />
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="border rounded p-2"
+              placeholder="End Date"
+            />
+          </div>
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-50">
               <tr>
@@ -132,8 +167,8 @@ export default function Index({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {data &&
-                data.map((transaksi: any, index) => (
+              {filteredData &&
+                filteredData.map((transaksi: any, index) => (
                   <tr key={transaksi.id}>
                     <td
                       className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
@@ -169,8 +204,8 @@ export default function Index({
                           ? "Belum Bayar"
                           : transaksi.isPaid === "diproses"
                           ? "Diproses"
-                          : transaksi.isPaid === "sudah-datang"
-                          ? "Sudah Sampai"
+                          : transaksi.isPaid === "bayar-sebagian"
+                          ? "bayar-sebagian"
                           : "Lunas"}
                       </span>
                     </td>
@@ -188,7 +223,7 @@ export default function Index({
                           ? "Bayar Terlebih Dahulu"
                           : transaksi.isStatus === "inden"
                           ? "Inden"
-                          : "Lunas"}
+                          : "Sudah Sampai"}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

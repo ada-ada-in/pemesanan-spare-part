@@ -74,12 +74,41 @@ export class GenericServices {
     }
   }
 
+  async search(whereCondition, model) {
+    try {
+      this.item = await this.model.findAll({
+        where: whereCondition,
+        include: { model: model || null, as: "user" },
+        order: [["createdAt", "ASC"]],
+      });
+      this.item = this.item.map((record) => {
+        const formattedDate = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedDate = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        return {
+          ...record.toJSON(),
+          createdAt: formattedDate,
+          updatedAt: formattedUpdatedDate,
+        };
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error.message);
+    }
+  }
+
   async getDataCartItem(fieldName, fieldValue, model1) {
     try {
       this.item = await this.model.findAll({
         where: {
           [fieldName]: fieldValue,
         },
+        order: [["createdAt", "ASC"]],
         include: { model: model1, as: "sparepart" },
       });
       this.item = this.item.map((record) => {
