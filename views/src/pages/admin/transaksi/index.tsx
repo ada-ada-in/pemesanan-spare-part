@@ -58,51 +58,39 @@ export default function Index({
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
+  const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredData, setFilteredData] = React.useState(data);
 
   React.useEffect(() => {
-    // Filtering logic based on date input
-    if (startDate && endDate && data) {
-      const filtered = data.filter((transaksi) => {
-        const transactionDate = new Date(transaksi.createdAt);
-        return (
-          transactionDate >= new Date(startDate) &&
-          transactionDate <= new Date(endDate)
-        );
-      });
-      setFilteredData(filtered);
-    } else {
-      setFilteredData(data); // Reset if no dates are selected
-    }
-  }, [startDate, endDate, data]);
+    if (data) {
+      let filtered = data;
 
-  async function handlerDeleteModal(e: any, id: any) {
-    e.preventDefault();
-    setOpen(true);
-    try {
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const response = await request.json();
-      if (response.status.code == 200) {
-        toast.success(response.status.message);
-        setTimeout(() => {
-          router.push("/admin/motor");
-        }, 500);
-      } else {
-        toast.error(response.status.message);
+      if (startDate && endDate) {
+        filtered = filtered.filter((transaksi) => {
+          const transactionDate = new Date(transaksi.createdAt);
+          return (
+            transactionDate >= new Date(startDate) &&
+            transactionDate <= new Date(endDate)
+          );
+        });
       }
-    } catch (error: any) {
-      console.error(error);
+
+      if (searchTerm) {
+        filtered = filtered.filter((transaksi) => {
+          const { user, transaksi_number, isPaid, isStatus } = transaksi;
+          return (
+            user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            transaksi_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            isPaid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            isStatus.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        });
+      }
+
+      setFilteredData(filtered);
     }
-  }
+  }, [startDate, endDate, searchTerm, data]);
+
   return (
     <>
       <Sidebar profile={profile}>
@@ -127,136 +115,149 @@ export default function Index({
               className="border rounded p-2"
               placeholder="End Date"
             />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border rounded p-2"
+              placeholder="Search by Name, Transaction Number, or Status"
+            />
           </div>
-          <table className="min-w-full divide-y divide-gray-300">
-            <thead className="bg-gray-50">
-              <tr>
-                <th
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  hidden
-                >
-                  ID Kota
-                </th>
-                <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                  No
-                </th>
-                <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                  Nama
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Nomor Transaksi
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Total Harga
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Status
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Status Barang
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Image
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Tanggal
-                </th>
-                <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
-              {filteredData &&
-                filteredData.map((transaksi: any, index) => (
-                  <tr key={transaksi.id}>
-                    <td
-                      className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
-                      hidden
-                    >
-                      {transaksi.id}
-                    </td>
-                    <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
-                      {index + 1}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.user.name}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.transaksi_number}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      Rp. {transaksi.price_total}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      <span
-                        className={`${
-                          transaksi.isPaid === "belum-bayar"
-                            ? "bg-red-700"
-                            : transaksi.isPaid === "diproses"
-                            ? "bg-orange-500"
-                            : transaksi.isPaid === "bayar-sebagian"
-                            ? "bg-blue-500"
-                            : "bg-green-500"
-                        } text-white p-3`}
+          {filteredData && filteredData.length > 0 ? (
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th
+                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                    hidden
+                  >
+                    ID Kota
+                  </th>
+                  <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    No
+                  </th>
+                  <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                    Nama
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Nomor Transaksi
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Total Harga
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Status
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Status Barang
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Image
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Tanggal
+                  </th>
+                  <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {filteredData &&
+                  filteredData.map((transaksi: any, index) => (
+                    <tr key={transaksi.id}>
+                      <td
+                        className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
+                        hidden
                       >
-                        {transaksi.isPaid === "belum-bayar"
-                          ? "Belum Bayar"
-                          : transaksi.isPaid === "diproses"
-                          ? "Diproses"
-                          : transaksi.isPaid === "bayar-sebagian"
-                          ? "bayar-sebagian"
-                          : "Lunas"}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm">
-                      <span
-                        className={`${
-                          transaksi.isStatus === "bayar-telebih-dahulu"
-                            ? "bg-red-700"
-                            : transaksi.isStatus === "inden"
-                            ? "bg-orange-500"
-                            : "bg-green-500"
-                        } text-white p-3`}
-                      >
-                        {transaksi.isStatus === "bayar-telebih-dahulu"
-                          ? "Bayar Terlebih Dahulu"
-                          : transaksi.isStatus === "inden"
-                          ? "Inden"
-                          : "Sudah Sampai"}
-                      </span>
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.image ? (
-                        <button
-                          onClick={() => {
-                            setOpenImage(true);
-                            setSelectedImage(transaksi.image);
-                          }}
-                          className="text-blue-500 underline"
+                        {transaksi.id}
+                      </td>
+                      <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
+                        {index + 1}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {transaksi.user.name}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {transaksi.transaksi_number}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        Rp. {transaksi.price_total}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        <span
+                          className={`${
+                            transaksi.isPaid === "belum-bayar"
+                              ? "bg-red-700"
+                              : transaksi.isPaid === "diproses"
+                              ? "bg-orange-500"
+                              : transaksi.isPaid === "bayar-sebagian"
+                              ? "bg-blue-500"
+                              : "bg-green-500"
+                          } text-white p-3`}
                         >
-                          Lihat Gambar
-                        </button>
-                      ) : (
-                        "Belum ada bukti pembayaran"
-                      )}
-                    </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.createdAt}
-                    </td>
-                    <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
-                      <Link
-                        href={`/admin/diproses/${transaksi.id}`}
-                        className="text-indigo-600 hover:text-indigo-900"
-                      >
-                        Detail
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          {/* Modal for Image */}
+                          {transaksi.isPaid === "belum-bayar"
+                            ? "Belum Bayar"
+                            : transaksi.isPaid === "diproses"
+                            ? "Diproses"
+                            : transaksi.isPaid === "bayar-sebagian"
+                            ? "bayar-sebagian"
+                            : "Lunas"}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm">
+                        <span
+                          className={`${
+                            transaksi.isStatus === "bayar-telebih-dahulu"
+                              ? "bg-red-700"
+                              : transaksi.isStatus === "inden"
+                              ? "bg-orange-500"
+                              : "bg-green-500"
+                          } text-white p-3`}
+                        >
+                          {transaksi.isStatus === "bayar-telebih-dahulu"
+                            ? "Bayar Terlebih Dahulu"
+                            : transaksi.isStatus === "inden"
+                            ? "Inden"
+                            : "Sudah Sampai"}
+                        </span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {transaksi.image ? (
+                          <button
+                            onClick={() => {
+                              setOpenImage(true);
+                              setSelectedImage(transaksi.image);
+                            }}
+                            className="text-blue-500 underline"
+                          >
+                            Lihat Gambar
+                          </button>
+                        ) : (
+                          "Belum ada bukti pembayaran"
+                        )}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {transaksi.createdAt}
+                      </td>
+                      <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
+                        <Link
+                          href={`/admin/diproses/${transaksi.id}`}
+                          className="text-indigo-600 hover:text-indigo-900"
+                        >
+                          Detail
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-center text-gray-500 mt-4">
+              No matching data found. Please adjust your filters or search
+              criteria.
+            </div>
+          )}
           <Dialog
             className="relative z-50"
             open={openImage}

@@ -9,7 +9,6 @@ import {
   getOrderId,
   updateTransaksi,
   getOrderTransaksi,
-  searchOrders,
 } from "./order.controller.js";
 import express from "express";
 const router = express.Router();
@@ -24,6 +23,5 @@ router.get("/prosesorderid/:id", verifyToken, getOrderId);
 router.get("/userorder/:id_cart", verifyToken, getOrderByCartItem);
 router.get("/proses", verifyToken, getOrderByProses);
 router.get("/transaksi", verifyToken, getOrderTransaksi);
-router.get("/search", verifyToken, searchOrders);
 
 export default router;
