@@ -88,7 +88,7 @@ export default function Index({
         <Table
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
-          link="/user/transaksi/add"
+          link="/admin/diproses/add"
           data={data}
         >
           <table className="min-w-full divide-y divide-gray-300">

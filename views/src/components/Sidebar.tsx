@@ -20,7 +20,8 @@ import {
   UserIcon,
   WrenchIcon,
   RocketLaunchIcon,
-  Cog8ToothIcon,
+  ArrowPathRoundedSquareIcon,
+  CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
@@ -37,13 +38,13 @@ const navigations = [
   {
     name: "Diproses",
     href: "/admin/diproses",
-    icon: RocketLaunchIcon,
+    icon: ArrowPathRoundedSquareIcon,
     current: false,
   },
   {
     name: "Transaksi",
     href: "/admin/transaksi",
-    icon: RocketLaunchIcon,
+    icon: CurrencyDollarIcon,
     current: false,
   },
   {

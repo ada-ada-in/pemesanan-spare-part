@@ -87,7 +87,7 @@ export default function Index({
         });
       }
 
-      setFilteredData(filtered);
+      setFilteredData(filtered.length > 0 ? filtered : null);
     }
   }, [startDate, endDate, searchTerm, data]);
 
@@ -97,7 +97,7 @@ export default function Index({
         <Table
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
-          link="/user/transaksi/add"
+          link="/admin/transaksi/add"
           data={filteredData}
         >
           <div className="flex gap-4 mb-4">
