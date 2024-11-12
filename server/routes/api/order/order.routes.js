@@ -13,12 +13,14 @@ import {
   getPembayaranLunas,
   getPembayaranBayarSebagian,
   getPembayaranBelumBayar,
+  // CreateOrderUser,
 } from "./order.controller.js";
 import express from "express";
 const router = express.Router();
 import { upload } from "../../../utils/uploadImage.js";
 
 router.post("/order", verifyToken, CreateOrder);
+// router.post("/order/user", verifyToken, CreateOrderUser);
 router.put("/upload/:id", upload.single("image"), verifyToken, uploadImage);
 router.put("/updatetransaksi/:id", verifyToken, updateTransaksi);
 router.get("/proses/:id_cart", verifyToken, getOrderProsesById);

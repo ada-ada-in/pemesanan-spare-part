@@ -86,8 +86,8 @@ export default function Index({
     <>
       <Sidebar profile={profile}>
         <Table
-          title="Transaksi"
-          description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
+          title="Proses"
+          description="Management data Proses pada Yamaha Sabang Raya Motor Handil."
           link="/admin/diproses/add"
           data={data}
         >

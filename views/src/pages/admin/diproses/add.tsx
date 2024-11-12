@@ -144,7 +144,7 @@ export default function TambahMotor({
     );
     if (response) {
       setTimeout(() => {
-        router.push("/user/transaksi");
+        router.push("/user/diproses");
       }, 1500);
     }
   }
