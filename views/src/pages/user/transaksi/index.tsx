@@ -163,8 +163,8 @@ export default function Index({
                           ? "Belum Bayar"
                           : transaksi.isPaid === "diproses"
                           ? "Diproses"
-                          : transaksi.isPaid === "sudah-datang"
-                          ? "Sudah Sampai"
+                          : transaksi.isPaid === "bayar-sebagian"
+                          ? "Bayar Sebagian"
                           : "Lunas"}
                       </span>
                     </td>
@@ -182,7 +182,7 @@ export default function Index({
                           ? "Bayar Terlebih Dahulu"
                           : transaksi.isStatus === "inden"
                           ? "Inden"
-                          : "Lunas"}
+                          : "Sudah Datang"}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">

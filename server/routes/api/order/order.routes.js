@@ -9,6 +9,10 @@ import {
   getOrderId,
   updateTransaksi,
   getOrderTransaksi,
+  getPembayaran,
+  getPembayaranLunas,
+  getPembayaranBayarSebagian,
+  getPembayaranBelumBayar,
 } from "./order.controller.js";
 import express from "express";
 const router = express.Router();
@@ -23,5 +27,13 @@ router.get("/prosesorderid/:id", verifyToken, getOrderId);
 router.get("/userorder/:id_cart", verifyToken, getOrderByCartItem);
 router.get("/proses", verifyToken, getOrderByProses);
 router.get("/transaksi", verifyToken, getOrderTransaksi);
+router.get("/userpembayaran", verifyToken, getPembayaran);
+router.get("/userpembayaran/lunas", verifyToken, getPembayaranLunas);
+router.get(
+  "/userpembayaran/bayarsebagian",
+  verifyToken,
+  getPembayaranBayarSebagian
+);
+router.get("/userpembayaran/belumbayar", verifyToken, getPembayaranBelumBayar);
 
 export default router;

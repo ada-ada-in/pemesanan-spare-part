@@ -131,10 +131,10 @@ export default function Sidebar({
                 <div className="flex h-16 shrink-0 items-center mt-4">
                   <Link href="/admin" className="w-full">
                     <Image
-                      src="/images/logo.png"
+                      src="/images/yamaha.png"
                       alt="Yogi travel"
-                      width={64}
-                      height={64}
+                      width={46}
+                      height={46}
                       className="mx-auto"
                     />
                   </Link>
@@ -196,7 +196,7 @@ export default function Sidebar({
               <Link href="/admin" className="w-full mt-4">
                 <Image
                   src="/images/logo.png"
-                  alt="Yogi travel"
+                  alt="Yamaha sabang raya"
                   width={64}
                   height={64}
                   className="mx-auto"

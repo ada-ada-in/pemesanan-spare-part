@@ -196,6 +196,31 @@ export class GenericServices {
     }
   }
 
+  async getDataCountByUser(id_user) {
+    try {
+      this.item = await this.model.count({
+        where: { id_user: id_user },
+      });
+      return this.item;
+    } catch (error) {
+      return response.fail500(error);
+    }
+  }
+
+  async getDataCountByData(id_user, isPaid) {
+    try {
+      this.item = await this.model.count({
+        where: {
+          id_user: id_user,
+          isPaid: isPaid,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      return response.fail500(error);
+    }
+  }
+
   async getDataById(id) {
     try {
       this.item = await this.model.findOne({

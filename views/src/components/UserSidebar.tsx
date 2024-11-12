@@ -103,7 +103,7 @@ export default function UserSidebar({
                 <div className="flex h-16 shrink-0 items-center mt-4">
                   <Link href="/admin" className="w-full">
                     <Image
-                      src="/images/logo.png"
+                      src="/images/yamaha.png"
                       alt="Yogi travel"
                       width={64}
                       height={64}
@@ -167,10 +167,10 @@ export default function UserSidebar({
             <div className="flex h-16 shrink-0 items-center">
               <Link href="/admin" className="w-full mt-4">
                 <Image
-                  src="/images/logo.png"
-                  alt="Yogi travel"
-                  width={64}
-                  height={64}
+                  src="/images/yamaha.png"
+                  alt="Yamaha sabang raya"
+                  width={52}
+                  height={52}
                   className="mx-auto"
                 />
               </Link>

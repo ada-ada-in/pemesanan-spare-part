@@ -57,6 +57,73 @@ export const CreateOrder = async (req, res) => {
   }
 };
 
+export const getPembayaran = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const id_user = req.id;
+  console.log(id_user);
+  try {
+    const getDataPembayaran = await allService.CartService.getDataCountByUser(
+      id_user
+    );
+    if (!getDataPembayaran) return response.fail400("cannot get data lunas");
+
+    return response.success200(getDataPembayaran);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getPembayaranLunas = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const id_user = req.id;
+  console.log(id_user);
+  try {
+    const getDataPembayaranLunas =
+      await allService.CartService.getDataCountByData(id_user, "lunas");
+    if (!getDataPembayaranLunas)
+      return response.fail400("cannot get data lunas");
+
+    return response.success200(getDataPembayaranLunas);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getPembayaranBayarSebagian = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const id_user = req.id;
+  console.log(id_user);
+  try {
+    const getDataPembayaranBayarSebagian =
+      await allService.CartService.getDataCountByData(
+        id_user,
+        "bayar-sebagian"
+      );
+    if (!getDataPembayaranBayarSebagian)
+      return response.fail400("cannot get data bayar sebagian");
+
+    return response.success200(getDataPembayaranBayarSebagian);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
+export const getPembayaranBelumBayar = async (req, res) => {
+  const response = new ResponseHandler(res);
+  const id_user = req.id;
+  console.log(id_user);
+  try {
+    const getDataPembayaranBelumBayar =
+      await allService.CartService.getDataCountByData(id_user, "belum-bayar");
+    if (!getDataPembayaranBelumBayar)
+      return response.fail400("cannot get data belum bayar");
+
+    return response.success200(getDataPembayaranBelumBayar);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 export const getOrderByUser = async (req, res) => {
   const response = new ResponseHandler(res);
   try {

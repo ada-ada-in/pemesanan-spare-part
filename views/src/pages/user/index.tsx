@@ -3,17 +3,9 @@ import UserSidebar from "@/components/UserSidebar";
 import { guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { Guard } from "@/libs/middleware";
-import { RadioGroup, Radio } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
-import { redirect } from "next/dist/server/api-utils";
-
-interface Stats {
-  name: string;
-  value: number;
-  unit?: string;
-}
+import MapComponent from "../../components/MapComponent";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -36,60 +28,108 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
-  // const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-  // const [
-  //   dataProfile,
-  //   dataMobil,
-  //   dataKota,
-  //   dataJurusan,
-  //   dataTransaksi,
-  //   dataPaket,
-  //   dataUser,
-  // ] = await Promise.all([
-  //   getData(token, `${backendUrl}/user/profile`),
-  //   getData(token, `${backendUrl}/mobil`),
-  //   getData(token, `${backendUrl}/kota`),
-  //   getData(token, `${backendUrl}/jurusan`),
-  //   getData(token, `${backendUrl}/transaksi/admin`),
-  //   getData(token, `${backendUrl}/paket`),
-  //   getData(token, `${backendUrl}/user`),
-  // ]);
-  // const stats: Stats[] = [
-  //   { name: "Mobil", value: dataMobil?.data?.length || 0 },
-  //   { name: "Kota", value: dataKota?.data?.length || 0, unit: "kota" },
-  //   { name: "Jurusan", value: dataJurusan?.data?.length || 0, unit: "tujuan" },
-  //   { name: "Transaksi", value: dataTransaksi?.data?.length || 0 },
-  //   { name: "Paket", value: dataPaket?.data?.length || 0, unit: "paket" },
-  //   { name: "User", value: dataUser.length || 0, unit: "account" },
-  // ];
-  return { props: {} };
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const [
+    dataPembayaran,
+    dataPembayaranLunas,
+    dataPembayaranSebagian,
+    dataBelumBayar,
+  ] = await Promise.all([
+    getData(token, `${backendUrl}/userpembayaran`),
+    getData(token, `${backendUrl}/userpembayaran/lunas`),
+    getData(token, `${backendUrl}/userpembayaran/bayarsebagian`),
+    getData(token, `${backendUrl}/userpembayaran/belumbayar`),
+  ]);
+  return {
+    props: {
+      token,
+      dataPembayaran: dataPembayaran?.data,
+      dataPembayaranLunas: dataPembayaranLunas?.data || [],
+      dataPembayaranSebagian: dataPembayaranSebagian?.data || [],
+      dataBelumBayar: dataBelumBayar?.data || [],
+    },
+  };
 }
 
 export default function Index({
-  stats,
+  dataPembayaran,
+  dataPembayaranLunas,
+  dataPembayaranSebagian,
+  dataBelumBayar,
   profile,
 }: {
-  stats: Stats[];
+  dataPembayaran: any[] | null;
+  dataPembayaranLunas: any[] | null;
+  dataPembayaranSebagian: any[] | null;
+  dataBelumBayar: any[] | null;
   profile: any | null;
 }) {
   return (
     <UserSidebar profile={profile}>
       <div className="w-full grid gap-4 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5">
-        {/* {stats.map((stat: Stats, index: number) => ( */}
-        <div
-          // key={index}
-          className="group relative flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500"
-        >
+        <div className="group relative flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500">
           <div className="w-full flex flex-col gap-2">
-            <p className="block text-lg font-normal text-gray-900 my-auto">
-              {/* {stat.name} */}
+            <p className="block text-2xl font-normal text-gray-900 my-auto">
+              Total Pembayaran
             </p>
-            <p className="font-medium text-5xl text-right w-full text-gray-900">
-              {/* {stat.value} */}
+            <p className="font-medium text-5xl text-center w-full text-gray-900">
+              {dataPembayaran}
             </p>
           </div>
         </div>
-        {/* ))} */}
+        <div className="group relative flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500">
+          <div className="w-full flex flex-col gap-2">
+            <p className="block text-2xl font-normal text-gray-900 my-auto">
+              Lunas
+            </p>
+            <p className="font-medium text-5xl text-center w-full text-gray-900">
+              {dataPembayaranLunas}
+            </p>
+          </div>
+        </div>
+        <div className="group relative flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500">
+          <div className="w-full flex flex-col gap-2">
+            <p className="block text-2xl font-normal text-gray-900 my-auto">
+              Bayar Sebagian
+            </p>
+            <p className="font-medium text-5xl text-center w-full text-gray-900">
+              {dataPembayaranSebagian}
+            </p>
+          </div>
+        </div>
+        <div className="group relative flex cursor-pointer rounded-lg border border-gray-200 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500">
+          <div className="w-full flex flex-col gap-2">
+            <p className="block text-2xl font-normal text-gray-900 my-auto">
+              Belum Bayar
+            </p>
+            <p className="font-medium text-5xl text-center w-full text-gray-900">
+              {dataPembayaranSebagian}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="my-12 font-bold">
+        <p className="text-center my-6 text-2xl">
+          Yamaha Sabang Raya Motor Handil
+        </p>
+        <iframe
+          width="100%"
+          height="400"
+          frameBorder="0"
+          scrolling="no"
+          marginHeight="0"
+          marginWidth="0"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=103.586321%2C-1.629490%2C103.606321%2C-1.609490&layer=mapnik&marker=-1.619490%2C103.596321"
+        ></iframe>
+        <br />
+        <a
+          href="https://www.openstreetmap.org/way/982369064#map=18/-1.619490/103.596321"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline"
+        >
+          Pergi Ke Lokasi
+        </a>
       </div>
     </UserSidebar>
   );

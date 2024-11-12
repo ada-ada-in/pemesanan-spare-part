@@ -3,6 +3,7 @@ import Router from "next/router";
 import Cookies from "js-cookie";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Login() {
   const [data, setData] = React.useState({
@@ -136,7 +137,14 @@ export default function Login() {
         </div>
       </div>
       <div className="relative overflow-hidden md:flex bg-gradient-to-tr from-cyan-600  to-cyan-700 i justify-around items-center hidden ">
-        <div>
+        <div className="flex">
+          <Image
+            className="mx-3"
+            width={100}
+            height={100}
+            src={"/images/yamaha.png"}
+            alt="yamaha"
+          />
           <h1 className="text-white font-bold text-4xl font-sans">
             Yamaha Sabang Raya
             <br />
