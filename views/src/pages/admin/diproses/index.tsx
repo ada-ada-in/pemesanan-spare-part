@@ -1,6 +1,6 @@
 import React from "react";
 import Sidebar from "@/components/Sidebar";
-import Table from "@/components/Table";
+import TableNotButton from "@/components/TableNotButton";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
@@ -85,7 +85,7 @@ export default function Index({
   return (
     <>
       <Sidebar profile={profile}>
-        <Table
+        <TableNotButton
           title="Proses"
           description="Management data Proses pada Yamaha Sabang Raya Motor Handil."
           link="/admin/diproses/add"
@@ -268,7 +268,7 @@ export default function Index({
               </div>
             </div>
           </Dialog>
-        </Table>
+        </TableNotButton>
       </Sidebar>
     </>
   );

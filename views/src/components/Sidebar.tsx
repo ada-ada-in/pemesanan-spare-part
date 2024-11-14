@@ -195,7 +195,7 @@ export default function Sidebar({
             <div className="flex h-16 shrink-0 items-center">
               <Link href="/admin" className="w-full mt-4">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/yamaha.png"
                   alt="Yamaha sabang raya"
                   width={64}
                   height={64}

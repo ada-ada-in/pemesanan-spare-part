@@ -81,7 +81,7 @@ export default function DetaiMotor({
     );
     if (response) {
       setTimeout(() => {
-        router.push("/admin/pemesanan/add");
+        router.push("/admin/diproses");
       });
     }
   };

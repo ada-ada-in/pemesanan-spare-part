@@ -5,7 +5,6 @@ import { GetServerSidePropsContext } from "next";
 import { Guard } from "@/libs/middleware";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
-import MapComponent from "../../components/MapComponent";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);

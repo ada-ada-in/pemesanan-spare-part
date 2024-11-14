@@ -82,7 +82,7 @@ export default function DetaiMotor({
     );
     if (response) {
       setTimeout(() => {
-        router.push("/admin/sparepart");
+        router.push("/admin/pemesanan");
       });
     }
   };

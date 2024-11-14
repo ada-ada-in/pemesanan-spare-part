@@ -43,6 +43,7 @@ export default function TambahMotor({
     qty: "",
     id_motor: "",
     id_sparepart: "",
+    id_user: "",
   });
 
   const [dataMotor, setDataMotor] = React.useState<any[]>([]);
@@ -50,6 +51,7 @@ export default function TambahMotor({
   const [idMotor, setIdMotor] = React.useState<string | undefined>();
   const [idSparepart, setIdSparePart] = React.useState<string | undefined>();
   const [harga, setHarga] = React.useState<{ price?: number }>({});
+  const [user, setUser] = React.useState<any[]>([]);
 
   // State to hold the cart items
   const [cart, setCart] = React.useState<any[]>([]);
@@ -92,6 +94,19 @@ export default function TambahMotor({
 
     fetchMotorData();
   }, [token]);
+
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await getData(
+        token,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user`
+      );
+      setUser(response.data || []);
+    };
+    fetchUserData();
+  }, [token]);
+
+  console.log(user);
 
   React.useEffect(() => {
     if (idMotor) {
@@ -139,7 +154,7 @@ export default function TambahMotor({
     const response = await postData(
       e,
       token,
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/order`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/admin`,
       data
     );
     if (response) {
@@ -177,6 +192,35 @@ export default function TambahMotor({
       <div className="mt-10 flex space-x-8">
         <div className="w-2/3">
           <form onSubmit={handlerSubmit}>
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
+              <label
+                htmlFor="id_user"
+                className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
+              >
+                User
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <select
+                  required
+                  name="id_user"
+                  id="id_user"
+                  value={catchData.id_user}
+                  onChange={handleChange}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  <option value="" disabled>
+                    Pilih User
+                  </option>
+                  {Array.isArray(user) &&
+                    user.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+            </div>
+
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
               <label
                 htmlFor="id_motor"
