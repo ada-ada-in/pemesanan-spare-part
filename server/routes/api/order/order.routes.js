@@ -14,11 +14,13 @@ import {
   getPembayaranBayarSebagian,
   getPembayaranBelumBayar,
   CreateOrderUser,
+  deleteUserTransaction,
 } from "./order.controller.js";
 import express from "express";
 const router = express.Router();
 import { upload } from "../../../utils/uploadImage.js";
 
+router.delete("/order/user/:id", verifyToken, deleteUserTransaction);
 router.post("/order", verifyToken, CreateOrder);
 router.post("/order/admin", verifyToken, CreateOrderUser);
 router.put("/upload/:id", upload.single("image"), verifyToken, uploadImage);

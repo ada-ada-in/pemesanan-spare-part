@@ -39,7 +39,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       token,
-      data: dataTransaksi.data,
+      data: dataTransaksi.data || [],
     },
   };
 }
@@ -53,6 +53,7 @@ export default function Index({
   profile: any[] | null;
 }) {
   const router = useRouter();
+  const [id, setId] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
@@ -62,7 +63,7 @@ export default function Index({
     setOpen(true);
     try {
       const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -75,7 +76,7 @@ export default function Index({
       if (response.status.code == 200) {
         toast.success(response.status.message);
         setTimeout(() => {
-          router.push("/admin/motor");
+          router.push("/user/transaksi");
         }, 500);
       } else {
         toast.error(response.status.message);
@@ -84,6 +85,8 @@ export default function Index({
       console.error(error);
     }
   }
+
+  console.log(id);
   return (
     <>
       <UserSidebar profile={profile}>
@@ -129,8 +132,8 @@ export default function Index({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {data &&
-                data.map((transaksi: any, index) => (
+              {Array.isArray(data) && data.length > 0 ? (
+                data.map((transaksi: any, index: number) => (
                   <tr key={transaksi.id}>
                     <td
                       className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
@@ -210,9 +213,25 @@ export default function Index({
                       >
                         Detail
                       </Link>
+                      <a
+                        className="text-rose-600 hover:text-rose-900 cursor-pointer"
+                        onClick={() => {
+                          setOpen(true);
+                          setId(transaksi.id);
+                        }}
+                      >
+                        Delete
+                      </a>
                     </td>
                   </tr>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} className="text-center text-gray-500 py-4">
+                    No data available
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
           {/* Modal for Image */}
@@ -254,6 +273,61 @@ export default function Index({
                         <button
                           className="bg-cyan-600 py-2 px-3 text-white rounded-md"
                           onClick={() => setOpenImage(false)}
+                        >
+                          Kembali
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </div>
+            </div>
+          </Dialog>
+          {/* Modal for delete data */}
+          <Dialog
+            className="relative z-50"
+            open={open}
+            onClose={() => setOpen(false)}
+          >
+            <DialogBackdrop
+              transition
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <DialogPanel
+                  transition
+                  className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl"
+                >
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                      <DialogTitle
+                        as="h3"
+                        className="text-base font-semibold leading-6 text-gray-900"
+                      >
+                        Yakin ingin menghapus data{" "}
+                      </DialogTitle>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Menghapus data membuat data yang sudah tersimpan
+                          sebelumnya menghilang <br /> dan tidak bisa
+                          dikembalian seperti sebelumnya!
+                        </p>
+                      </div>
+
+                      <div className="mt-3 space-x-3">
+                        <button
+                          className="bg-rose-600 py-2 px-3 text-white rounded-md hover:bg-rose-900 hover:duration-100"
+                          onClick={(e) => {
+                            setOpen(false);
+                            handlerDeleteModal(e, id);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="bg-cyan-600 py-2 px-3 text-white rounded-md hover:bg-cyan-900 hover:duration-100"
+                          onClick={() => setOpen(false)}
                         >
                           Kembali
                         </button>

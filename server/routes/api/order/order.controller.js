@@ -242,6 +242,18 @@ export const uploadImage = async (req, res) => {
   }
 };
 
+export const deleteUserTransaction = async (req, res) => {
+  const response = new ResponseHandler(res);
+  try {
+    const { id } = req.params;
+    const deleteData = await allService.CartService.delete(id);
+    if (!deleteData) return response.fail400("cannot delete data");
+    return response.successDelete200(deleteData);
+  } catch (error) {
+    return response.fail500(error.message);
+  }
+};
+
 //  ADMIN
 
 export const getOrderByProses = async (req, res) => {
