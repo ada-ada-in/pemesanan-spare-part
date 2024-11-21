@@ -53,10 +53,10 @@ export default function Register() {
       <div className="relative overflow-hidden md:flex w-1/2 bg-gradient-to-tr from-cyan-600  to-cyan-700 i justify-around items-center hidden">
         <div className="flex">
           <Image
-            className="mx-3"
-            width={100}
-            height={100}
-            src={"/images/yamaha.png"}
+            className="mx-3 drop-shadow-md"
+            width={120}
+            height={120}
+            src={"/images/new-yamaha.png"}
             alt="yamaha"
           />
           <h1 className="text-white font-bold text-4xl font-sans">
