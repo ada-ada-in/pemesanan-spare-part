@@ -15,6 +15,7 @@ import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
+import ReactPaginate from "react-paginate";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -62,6 +63,38 @@ export default function Index({
   const [id, setId] = React.useState();
   const [motorName, setMotorName] = React.useState();
   const [tahun, setTahun] = React.useState();
+  const [isClient, setIsClient] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(0); // Halaman aktif
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null; // Return nothing or a loading spinner
+  }
+
+  if (!isClient) {
+    return null; // or a loading spinner
+  }
+
+  const itemsPerPage = 8;
+
+  // Hitung total halaman
+  const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
+
+  // Dapatkan data yang ditampilkan pada halaman saat ini
+  const currentData = data
+    ? data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+    : [];
+
+  // Handle perubahan halaman
+  const handlePageClick = (event: { selected: number }) => {
+    setCurrentPage(event.selected);
+  };
+
   async function handlerDeleteModal(e: any, id: any) {
     e.preventDefault();
     setOpen(true);
@@ -138,8 +171,8 @@ export default function Index({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {data &&
-                data.map((motor: any, number) => (
+              {currentData &&
+                currentData.map((motor: any, number) => (
                   <tr key={motor.id}>
                     <td
                       className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
@@ -238,6 +271,24 @@ export default function Index({
                   </tr>
                 ))}
             </tbody>
+            <div className="mt-4 text-gray-500 ">
+              <ReactPaginate
+                className="flex items-center justify-center gap-2 fonts-semibold text-white p-4 bg-blue-700	"
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
+            </div>
           </table>
         </Table>
       </Sidebar>

@@ -72,7 +72,7 @@ export default function Index({
               Total Pembayaran
             </p>
             <p className="font-medium text-5xl text-center w-full text-gray-900">
-              {dataPembayaran}
+              {dataPembayaran || 0}
             </p>
           </div>
         </div>
@@ -82,7 +82,7 @@ export default function Index({
               Lunas
             </p>
             <p className="font-medium text-5xl text-center w-full text-gray-900">
-              {dataPembayaranLunas}
+              {dataPembayaranLunas || 0}
             </p>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function Index({
               Bayar Sebagian
             </p>
             <p className="font-medium text-5xl text-center w-full text-gray-900">
-              {dataPembayaranSebagian}
+              {dataPembayaranSebagian || 0}
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function Index({
               Belum Bayar
             </p>
             <p className="font-medium text-5xl text-center w-full text-gray-900">
-              {dataPembayaranSebagian}
+              {dataBelumBayar || 0}
             </p>
           </div>
         </div>
@@ -116,8 +116,8 @@ export default function Index({
           height="400"
           frameBorder="0"
           scrolling="no"
-          marginHeight="0"
-          marginWidth="0"
+          marginHeight={0}
+          marginWidth={0}
           src="https://www.openstreetmap.org/export/embed.html?bbox=103.586321%2C-1.629490%2C103.606321%2C-1.609490&layer=mapnik&marker=-1.619490%2C103.596321"
         ></iframe>
         <br />

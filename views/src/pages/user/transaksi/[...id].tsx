@@ -120,7 +120,10 @@ export default function DetaiMotor({
                     {cart.qty}
                   </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    {cart.harga}
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                    }).format(cart.harga || 0)}
                   </td>
                 </tr>
               ))}
@@ -128,13 +131,19 @@ export default function DetaiMotor({
             <tr>
               <th colSpan={4}>Total Harga</th>
               <th className="text-start" colSpan={1}>
-                {`Rp. ${totalHarga}`}
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(totalHarga || 0)}
               </th>
             </tr>
             <tr>
               <th colSpan={4}>Minimum Pembayaran</th>
               <th className="text-start" colSpan={1}>
-                {`Rp. ${totalHarga / 2}`}
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(totalHarga / 2 || 0)}
               </th>
             </tr>
           </tbody>

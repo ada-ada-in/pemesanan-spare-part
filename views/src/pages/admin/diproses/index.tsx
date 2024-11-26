@@ -54,13 +54,16 @@ export default function Index({
   const [open, setOpen] = React.useState(false);
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [id, setId] = React.useState(null);
 
   async function handlerDeleteModal(e: any, id: any) {
     e.preventDefault();
     setOpen(true);
+    setId(id);
+
     try {
       const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/motor/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -72,9 +75,10 @@ export default function Index({
       const response = await request.json();
       if (response.status.code == 200) {
         toast.success(response.status.message);
-        setTimeout(() => {
-          router.push("/admin/motor");
-        }, 500);
+        // setTimeout(() => {
+        // router.push("/admin/motor");
+        window.location.replace("/admin/motor");
+        // }, 500);
       } else {
         toast.error(response.status.message);
       }
@@ -149,7 +153,10 @@ export default function Index({
                       {transaksi.transaksi_number}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      Rp. {transaksi.price_total}
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      }).format(transaksi.price_total || 0)}{" "}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <span
@@ -214,6 +221,14 @@ export default function Index({
                       >
                         Detail
                       </Link>
+                      <a
+                        className="text-rose-600 hover:text-rose-900 cursor-pointer"
+                        onClick={() => {
+                          setOpen(true);
+                        }}
+                      >
+                        Hapus
+                      </a>
                     </td>
                   </tr>
                 ))}
@@ -223,7 +238,9 @@ export default function Index({
           <Dialog
             className="relative z-50"
             open={openImage}
-            onClose={() => setOpenImage(false)}
+            onClose={() => {
+              setOpenImage(false);
+            }}
           >
             <DialogBackdrop
               transition
@@ -258,6 +275,60 @@ export default function Index({
                         <button
                           className="bg-cyan-600 py-2 px-3 text-white rounded-md"
                           onClick={() => setOpenImage(false)}
+                        >
+                          Kembali
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </div>
+            </div>
+          </Dialog>
+          <Dialog
+            className="relative z-50"
+            open={open}
+            onClose={() => setOpen(false)}
+          >
+            <DialogBackdrop
+              transition
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+            />
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <DialogPanel
+                  transition
+                  className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl"
+                >
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                      <DialogTitle
+                        as="h3"
+                        className="text-base font-semibold leading-6 text-gray-900"
+                      >
+                        Yakin ingin menghapus data{" "}
+                      </DialogTitle>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Menghapus data membuat data yang sudah tersimpan
+                          sebelumnya menghilang <br /> dan tidak bisa
+                          dikembalian seperti sebelumnya!
+                        </p>
+                      </div>
+
+                      <div className="mt-3 space-x-3">
+                        <button
+                          className="bg-rose-600 py-2 px-3 text-white rounded-md hover:bg-rose-900 hover:duration-100"
+                          onClick={(e) => {
+                            handlerDeleteModal(e, id);
+                            setOpen(false);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="bg-cyan-600 py-2 px-3 text-white rounded-md hover:bg-cyan-900 hover:duration-100"
+                          onClick={() => setOpen(false)}
                         >
                           Kembali
                         </button>

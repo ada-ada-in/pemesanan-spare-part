@@ -16,6 +16,8 @@ import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
+import ReactPaginate from "react-paginate";
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
   if (!isLogin)
@@ -58,6 +60,37 @@ export default function Index({
   const [open, setOpen] = React.useState(false);
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [currentPage, setCurrentPage] = React.useState(0); // Halaman aktif
+  const [isClient, setIsClient] = React.useState(false);
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return null; // Return nothing or a loading spinner
+  }
+
+  if (!isClient) {
+    return null; // or a loading spinner
+  }
+
+  const itemsPerPage = 10;
+
+  // Hitung total halaman
+  const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
+
+  // Dapatkan data yang ditampilkan pada halaman saat ini
+  const currentData = data
+    ? data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+    : [];
+
+  // Handle perubahan halaman
+  const handlePageClick = (event: { selected: number }) => {
+    setCurrentPage(event.selected);
+  };
 
   async function handleDeleteTransaction(
     e: React.MouseEvent,
@@ -131,8 +164,8 @@ export default function Index({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {Array.isArray(data) && data.length > 0 ? (
-                data.map((transaksi: any, index: number) => (
+              {Array.isArray(currentData) && currentData.length > 0 ? (
+                currentData.map((transaksi: any, index: number) => (
                   <tr key={transaksi.id}>
                     <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
                       {index + 1}
@@ -221,7 +254,6 @@ export default function Index({
                         className="text-rose-600 hover:text-rose-900 cursor-pointer"
                         onClick={() => {
                           setOpen(true);
-                          setId(transaksi.id);
                         }}
                       >
                         Hapus
@@ -237,6 +269,25 @@ export default function Index({
                 </tr>
               )}
             </tbody>
+
+            <div className="mt-4 text-gray-500 ">
+              <ReactPaginate
+                className="flex items-center justify-center gap-2 fonts-semibold text-white p-4 bg-blue-700	"
+                breakLabel={"..."}
+                pageCount={pageCount}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+                pageClassName={"page-item"}
+                pageLinkClassName={"page-link"}
+                previousClassName={"page-item"}
+                previousLinkClassName={"page-link"}
+                nextClassName={"page-item"}
+                nextLinkClassName={"page-link"}
+                breakClassName={"page-item"}
+                breakLinkClassName={"page-link"}
+              />
+            </div>
           </table>
           {/* Modal for Image */}
           <Dialog
