@@ -6,6 +6,7 @@ import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import {
+  Button,
   Dialog,
   DialogBackdrop,
   DialogPanel,
@@ -58,12 +59,16 @@ export default function Index({
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
-  async function handlerDeleteModal(e: any, id: any) {
+  async function handleDeleteTransaction(
+    e: React.MouseEvent,
+    transactionId: any
+  ) {
     e.preventDefault();
     setOpen(true);
+    setId(transactionId);
     try {
-      const request = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${id}`,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${transactionId}`,
         {
           method: "DELETE",
           headers: {
@@ -72,21 +77,21 @@ export default function Index({
           },
         }
       );
-      const response = await request.json();
-      if (response.status.code == 200) {
-        toast.success(response.status.message);
-        setTimeout(() => {
-          router.push("/user/transaksi");
-        }, 500);
+      const result = await response.json();
+      if (result.status.code === 200) {
+        toast.success(result.status.message);
+        // setTimeout(() => {
+        window.location.replace("/user/transaksi");
+        // router.push('/user/transaksi')
+        // }, 0);
       } else {
-        toast.error(response.status.message);
+        toast.error(result.status.message);
       }
-    } catch (error: any) {
-      console.error(error);
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
     }
   }
 
-  console.log(id);
   return (
     <>
       <UserSidebar profile={profile}>
@@ -99,12 +104,6 @@ export default function Index({
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-50">
               <tr>
-                <th
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  hidden
-                >
-                  ID Kota
-                </th>
                 <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
                   No
                 </th>
@@ -135,20 +134,17 @@ export default function Index({
               {Array.isArray(data) && data.length > 0 ? (
                 data.map((transaksi: any, index: number) => (
                   <tr key={transaksi.id}>
-                    <td
-                      className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
-                      hidden
-                    >
-                      {transaksi.id}
-                    </td>
                     <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
                       {index + 1}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.transaksi_number}
+                      {transaksi.transaksi_number || "N/A"}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      Rp. {transaksi.price_total}
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      }).format(transaksi.price_total || 0)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
                       <span
@@ -159,7 +155,9 @@ export default function Index({
                             ? "bg-orange-500"
                             : transaksi.isPaid === "bayar-sebagian"
                             ? "bg-blue-500"
-                            : "bg-green-500"
+                            : transaksi.isPaid === "lunas"
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                         } text-white p-3`}
                       >
                         {transaksi.isPaid === "belum-bayar"
@@ -168,7 +166,9 @@ export default function Index({
                           ? "Diproses"
                           : transaksi.isPaid === "bayar-sebagian"
                           ? "Bayar Sebagian"
-                          : "Lunas"}
+                          : transaksi.isPaid === "lunas"
+                          ? "Lunas"
+                          : "Status Tidak Tersedia"}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm">
@@ -178,14 +178,18 @@ export default function Index({
                             ? "bg-red-700"
                             : transaksi.isStatus === "inden"
                             ? "bg-orange-500"
-                            : "bg-green-500"
+                            : transaksi.isStatus === "sudah-datang"
+                            ? "bg-green-500"
+                            : "bg-gray-300"
                         } text-white p-3`}
                       >
                         {transaksi.isStatus === "bayar-telebih-dahulu"
                           ? "Bayar Terlebih Dahulu"
                           : transaksi.isStatus === "inden"
                           ? "Inden"
-                          : "Sudah Datang"}
+                          : transaksi.isStatus === "sudah-datang"
+                          ? "Sudah Datang"
+                          : "Status Tidak Tersedia"}
                       </span>
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -204,7 +208,7 @@ export default function Index({
                       )}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {transaksi.createdAt}
+                      {transaksi.createdAt || "Tanggal Tidak Tersedia"}
                     </td>
                     <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
                       <Link
@@ -220,7 +224,7 @@ export default function Index({
                           setId(transaksi.id);
                         }}
                       >
-                        Delete
+                        Hapus
                       </a>
                     </td>
                   </tr>
@@ -316,15 +320,15 @@ export default function Index({
                       </div>
 
                       <div className="mt-3 space-x-3">
-                        <button
+                        <Button
                           className="bg-rose-600 py-2 px-3 text-white rounded-md hover:bg-rose-900 hover:duration-100"
                           onClick={(e) => {
+                            handleDeleteTransaction(e, id);
                             setOpen(false);
-                            handlerDeleteModal(e, id);
                           }}
                         >
                           Delete
-                        </button>
+                        </Button>
                         <button
                           className="bg-cyan-600 py-2 px-3 text-white rounded-md hover:bg-cyan-900 hover:duration-100"
                           onClick={() => setOpen(false)}

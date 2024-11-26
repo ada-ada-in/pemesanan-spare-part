@@ -74,6 +74,37 @@ export class GenericServices {
     }
   }
 
+  async getDataById(fieldName, fieldValue) {
+    try {
+      const records = await this.model.findAll({
+        where: {
+          [fieldName]: fieldValue,
+        },
+      });
+
+      const formattedRecords = records.map((record) => {
+        const formattedCreatedAt = record.createdAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+        const formattedUpdatedAt = record.updatedAt
+          .toISOString()
+          .replace("T", " ")
+          .substring(0, 19);
+
+        return {
+          ...record.toJSON(),
+          createdAt: formattedCreatedAt,
+          updatedAt: formattedUpdatedAt,
+        };
+      });
+
+      return formattedRecords;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
   async search(whereCondition, model) {
     try {
       this.item = await this.model.findAll({

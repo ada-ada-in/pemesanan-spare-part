@@ -4,10 +4,6 @@ import http from "http";
 import express from "express";
 import { sequelize } from "./server/configs/database.js";
 import cors from "cors";
-// import CartItemsModels from "./server/models/cartItems.models.js";
-// import CartModels from "./server/models/cart.models.js";
-// app.use(CartItemsModels);
-// app.use(CartModels);
 
 app.use(cors());
 app.use(express.json());

@@ -188,6 +188,7 @@ export const getOrderByUser = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
     const id = req.id;
+    console.log(id);
     const userOrder = await allService.CartService.getDataByIdName(
       "id_user",
       id,
@@ -250,6 +251,9 @@ export const deleteUserTransaction = async (req, res) => {
     if (!deleteData) return response.fail400("cannot delete data");
     return response.successDelete200(deleteData);
   } catch (error) {
+    if (error.name === "SequelizeForeignKeyConstraintError") {
+      return response.fail400("cannot delete data, foreign key constraint");
+    }
     return response.fail500(error.message);
   }
 };

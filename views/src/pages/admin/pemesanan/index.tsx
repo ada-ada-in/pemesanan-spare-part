@@ -81,7 +81,7 @@ export default function Index({
       if (response.status.code == 200) {
         toast.success(response.status.message);
         setTimeout(() => {
-          router.push("/admin/sparepart");
+          router.push("/admin/pemesanan");
         }, 500);
       } else {
         toast.error(response.status.message);
