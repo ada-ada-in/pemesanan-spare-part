@@ -106,8 +106,8 @@ export default function DetaiMotor({
             <div className="mt-2 sm:col-span-2 sm:mt-0">
               <input
                 type="text"
-                name="motor_name"
-                id="motor_name"
+                name="sparepart_name"
+                id="sparepart_name"
                 autoComplete="given-name"
                 onChange={handleChange}
                 value={data.sparepart_name}
@@ -120,13 +120,13 @@ export default function DetaiMotor({
               htmlFor="nama_kota"
               className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
             >
-              Tahun
+              Harga
             </label>
             <div className="mt-2 sm:col-span-2 sm:mt-0">
               <input
                 type="number"
-                name="tahun"
-                id="tahun"
+                name="price"
+                id="price"
                 autoComplete="given-name"
                 onChange={handleChange}
                 value={data.price}

@@ -26,18 +26,14 @@ export const createSparePart = async (req, res) => {
     if (!id_motor || id_motor === null) {
       return response.fail400("Please insert motor name");
     }
-    const spartPartNameCheck = await allService.sparePartService.getNameCheck(
+    const ifExist = await allService.sparePartService.ifExist(
       "sparepart_name",
-      sparepart_name
+      sparepart_name,
+      "id_motor",
+      id_motor
     );
-    const priceCheck = await allService.sparePartService.getNameCheck(
-      "price",
-      price
-    );
-    if (spartPartNameCheck && priceCheck) {
-      return response.fail400(
-        "Spare Part with this name and price already exists in the data"
-      );
+    if (ifExist) {
+      return response.fail400("Sparepart already exist");
     }
     const formattedTitleCase = toTitleCase(sparepart_name);
     const createNewSparePart = await allService.sparePartService.create({

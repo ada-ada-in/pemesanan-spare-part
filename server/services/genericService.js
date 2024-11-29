@@ -293,6 +293,20 @@ export class GenericServices {
     }
   }
 
+  async ifExist(fieldName, fieldValue, fieldName2, fieldValue2) {
+    try {
+      this.item = await this.model.findOne({
+        where: {
+          [fieldName]: fieldValue,
+          [fieldName2]: fieldValue2,
+        },
+      });
+      return this.item;
+    } catch (error) {
+      response.fail500(error);
+    }
+  }
+
   async getNameCheckWithModels(fieldName, fieldValue, model) {
     try {
       this.item = await this.model.findOne({

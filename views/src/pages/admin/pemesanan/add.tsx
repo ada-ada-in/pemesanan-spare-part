@@ -65,6 +65,8 @@ export default function TambahMotor({
     }
   };
 
+  console.log(data);
+
   React.useEffect(() => {
     const fetchMotorData = async () => {
       const response = await getData(
@@ -81,8 +83,6 @@ export default function TambahMotor({
     const { name, value } = e.target;
     setData((prevData) => ({ ...prevData, [name]: value }));
   }
-
-  console.log(dataMotor);
 
   return (
     <Sidebar profile={profile}>

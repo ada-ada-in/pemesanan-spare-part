@@ -273,7 +273,7 @@ export default function Index({
             </tbody>
             <div className="mt-4 text-gray-500 ">
               <ReactPaginate
-                className="flex items-center justify-center gap-2 fonts-semibold text-white p-4 bg-blue-700	"
+                className="flex items-center justify-center gap-2 fonts-semibold text-white py-2 bg-blue-700	"
                 breakLabel={"..."}
                 pageCount={pageCount}
                 onPageChange={handlePageClick}

@@ -72,12 +72,8 @@ export default function Index({
     setIsHydrated(true);
   }, []);
 
-  if (!isHydrated) {
+  if (!isHydrated || !isClient) {
     return null; // Return nothing or a loading spinner
-  }
-
-  if (!isClient) {
-    return null; // or a loading spinner
   }
 
   const itemsPerPage = 8;
@@ -137,13 +133,7 @@ export default function Index({
           <table className="min-w-full divide-y divide-gray-300">
             <thead className="bg-gray-50">
               <tr>
-                <th
-                  scope="col"
-                  className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                  hidden
-                >
-                  ID Spare Part
-                </th>
+                <th hidden>ID Spare Part</th>
                 <th
                   scope="col"
                   className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
@@ -186,12 +176,7 @@ export default function Index({
               {currentData &&
                 currentData.map((sparepart: any, number) => (
                   <tr key={sparepart.id}>
-                    <td
-                      className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
-                      hidden
-                    >
-                      {sparepart.id}
-                    </td>
+                    <td hidden>{sparepart.id}</td>
                     <td className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500">
                       {number + 1}
                     </td>
@@ -199,7 +184,10 @@ export default function Index({
                       {sparepart.sparepart_name}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {"Rp " + sparepart.price}
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                      }).format(sparepart.price || 0)}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {sparepart.motor?.motor_name}
@@ -209,7 +197,7 @@ export default function Index({
                     </td>
                     <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
                       <Link
-                        href={`/admin/sparepart/${sparepart.id}`}
+                        href={`/admin/pemesanan/${sparepart.id}`}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         Edit<span className="sr-only">, kota name</span>
@@ -291,7 +279,7 @@ export default function Index({
             </tbody>
             <div className="mt-4 text-gray-500 ">
               <ReactPaginate
-                className="flex items-center justify-center gap-2 fonts-semibold text-white p-4 bg-blue-700	"
+                className="flex items-center justify-center gap-2 fonts-semibold text-white p-2 bg-blue-700	"
                 breakLabel={"..."}
                 pageCount={pageCount}
                 onPageChange={handlePageClick}
