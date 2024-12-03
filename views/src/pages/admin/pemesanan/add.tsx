@@ -65,8 +65,6 @@ export default function TambahMotor({
     }
   };
 
-  console.log(data);
-
   React.useEffect(() => {
     const fetchMotorData = async () => {
       const response = await getData(

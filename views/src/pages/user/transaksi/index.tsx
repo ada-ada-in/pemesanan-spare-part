@@ -70,24 +70,19 @@ export default function Index({
   }, []);
 
   if (!isHydrated) {
-    return null; // Return nothing or a loading spinner
+    return null;
   }
 
   if (!isClient) {
-    return null; // or a loading spinner
+    return null;
   }
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 8;
 
-  // Hitung total halaman
   const pageCount = data ? Math.ceil(data.length / itemsPerPage) : 0;
-
-  // Dapatkan data yang ditampilkan pada halaman saat ini
   const currentData = data
     ? data.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
     : [];
-
-  // Handle perubahan halaman
   const handlePageClick = (event: { selected: number }) => {
     setCurrentPage(event.selected);
   };
@@ -270,24 +265,22 @@ export default function Index({
               )}
             </tbody>
 
-            <div className="mt-4 text-gray-500 ">
-              <ReactPaginate
-                className="flex items-center justify-center gap-2 fonts-semibold text-white p-4 bg-blue-700	"
-                breakLabel={"..."}
-                pageCount={pageCount}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                activeClassName={"active"}
-                pageClassName={"page-item"}
-                pageLinkClassName={"page-link"}
-                previousClassName={"page-item"}
-                previousLinkClassName={"page-link"}
-                nextClassName={"page-item"}
-                nextLinkClassName={"page-link"}
-                breakClassName={"page-item"}
-                breakLinkClassName={"page-link"}
-              />
-            </div>
+            <ReactPaginate
+              className="flex items-center justify-center gap-2 fonts-semibold text-white py-2 bg-blue-700	"
+              breakLabel={"..."}
+              pageCount={pageCount}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+              pageClassName={"page-item"}
+              pageLinkClassName={"page-link"}
+              previousClassName={"page-item"}
+              previousLinkClassName={"page-link"}
+              nextClassName={"page-item"}
+              nextLinkClassName={"page-link"}
+              breakClassName={"page-item"}
+              breakLinkClassName={"page-link"}
+            />
           </table>
           {/* Modal for Image */}
           <Dialog

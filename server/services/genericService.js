@@ -52,6 +52,7 @@ export class GenericServices {
           [fieldName]: fieldValue,
         },
         include: { model: model || null, as: "user" },
+        order: [["createdAt", "DESC"]],
       });
       this.item = this.item.map((record) => {
         const formattedDate = record.createdAt

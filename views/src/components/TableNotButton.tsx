@@ -7,7 +7,7 @@ export default function TableNotButton({
   title: string;
   description: string;
   link: string;
-  data: any[] | null;
+  data: any[] | undefined;
   buttonOff?: boolean;
 }) {
   return (

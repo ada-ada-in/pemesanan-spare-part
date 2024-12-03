@@ -64,12 +64,12 @@ export default function TambahMotor({
     const newCartItem = {
       id_sparepart: idSparepart,
       qty: catchData.qty,
+      price: harga.price,
     };
 
     setCart((prevCart) => {
       const updatedCart = [...prevCart, newCartItem];
 
-      // Update the data state with the new cart
       setData({
         spareParts: updatedCart.map((item) => ({
           id_sparepart: item.id_sparepart,
@@ -295,15 +295,28 @@ export default function TambahMotor({
                 <span>
                   {dataSparePart.find((s) => s.id === item.id_sparepart)
                     ?.sparepart_name || "Spare Part"}{" "}
-                  - Qty: {item.qty}
+                  - Qty: {item.qty} -{" "}
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  }).format(item.price * item.qty)}
                 </span>
               </li>
             ))}
+
+            {/* Menghitung Total Harga */}
+            <li className="flex justify-between items-center font-bold">
+              <span>Total:</span>
+              <span>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(
+                  cart.reduce((total, item) => total + item.price * item.qty, 0)
+                )}
+              </span>
+            </li>
           </ul>
-          <div className="mt-4">
-            <p>Total Qty: {totalQty}</p>
-            <p>Total Price: Rp {totalPrice.toLocaleString()}</p>
-          </div>
           <button
             onClick={handleSubmit}
             className="mt-6 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded"

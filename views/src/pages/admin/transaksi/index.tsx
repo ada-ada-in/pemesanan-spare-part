@@ -3,7 +3,6 @@ import Sidebar from "@/components/Sidebar";
 import TableNotButton from "@/components/TableNotButton";
 import Link from "next/link";
 import Image from "next/image";
-import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import {
   Dialog,
@@ -15,6 +14,7 @@ import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
+import Pagination from "@/components/Pagination";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
   if (!isLogin)
@@ -60,6 +60,15 @@ export default function Index({
   const [endDate, setEndDate] = React.useState("");
   const [searchTerm, setSearchTerm] = React.useState("");
   const [filteredData, setFilteredData] = React.useState(data);
+  const [currentPage, setCurrentPage] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  const itemsPerPage = 8;
+  const currentData =
+    filteredData?.slice(
+      currentPage * itemsPerPage,
+      (currentPage + 1) * itemsPerPage
+    ) || [];
 
   React.useEffect(() => {
     if (data) {
@@ -91,6 +100,14 @@ export default function Index({
     }
   }, [startDate, endDate, searchTerm, data]);
 
+  React.useEffect(() => {
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <Sidebar profile={profile}>
@@ -98,7 +115,7 @@ export default function Index({
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
           link="/admin/transaksi/add"
-          data={filteredData}
+          data={currentData}
         >
           <div className="flex gap-4 mb-4">
             <input
@@ -163,8 +180,8 @@ export default function Index({
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
-                {filteredData &&
-                  filteredData.map((transaksi: any, index) => (
+                {currentData &&
+                  currentData.map((transaksi: any, index) => (
                     <tr key={transaksi.id}>
                       <td
                         className="whitespace-nowrap pl-6 pr-3 py-4 text-sm text-gray-500"
@@ -251,11 +268,18 @@ export default function Index({
                     </tr>
                   ))}
               </tbody>
+              <Pagination
+                totalItems={filteredData?.length}
+                itemsPerPage={itemsPerPage}
+                currentPage={currentPage}
+                onPageChange={(page) => setCurrentPage(page)}
+              />
             </table>
           ) : (
             <div className="text-center text-gray-500 mt-4">
-              No matching data found. Please adjust your filters or search
-              criteria.
+              {filteredData === undefined
+                ? "Loading..."
+                : "No matching data found. Please adjust your filters or search criteria."}
             </div>
           )}
           <Dialog

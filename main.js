@@ -14,22 +14,22 @@ app.get("/", async (req, res, next) => {
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 const start = async () => {
-  try {
-    // const database = await sequelize.sync({ alter: true });
-    const database = await sequelize.sync();
-    if (!database) {
-      console.log("database cannot sync");
-    } else {
-      console.log("====================================================");
-      console.log("Database Connected Successfully");
+    try {
+        // const database = await sequelize.sync({ alter: true });
+        const database = await sequelize.sync();
+        if (!database) {
+            console.log("database cannot sync");
+        } else {
+            console.log("====================================================");
+            console.log("Database Connected Successfully");
+        }
+        server.listen(PORT, () =>
+            console.log(`🚀 [SERVER] is running on port http://localhost:${PORT}`)
+        );
+        console.log("===================================================");
+    } catch (error) {
+        console.error(`⚠️ [ERROR] ${error.message}`);
     }
-    server.listen(PORT, () =>
-      console.log(`🚀 [SERVER] is running on port http://localhost:${PORT}`)
-    );
-    console.log("===================================================");
-  } catch (error) {
-    console.error(`⚠️ [ERROR] ${error.message}`);
-  }
-};
+}
 
 start();
