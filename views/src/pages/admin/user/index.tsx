@@ -107,11 +107,11 @@ export default function Index({
   }, []);
 
   if (!isHydrated) {
-    return null; // Return nothing or a loading spinner
+    return null;
   }
 
   if (!isClient) {
-    return null; // or a loading spinner
+    return null;
   }
 
   console.log(data);
@@ -153,7 +153,7 @@ export default function Index({
           description="Management data pengguna pada Yamaha Sabang Raya
         Motor Handil."
           link="/admin/user/add"
-          data={data}
+          data={currentData}
         >
           <div className="flex gap-4 mb-4">
             <input

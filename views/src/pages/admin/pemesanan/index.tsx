@@ -326,6 +326,7 @@ export default function Index({
                 totalItems={filteredData?.length}
                 itemsPerPage={itemsPerPage}
                 currentPage={currentPage}
+                breakLabel={"..."}
                 onPageChange={(page) => setCurrentPage(page)}
               />
             </table>
