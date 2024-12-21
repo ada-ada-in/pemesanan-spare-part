@@ -297,6 +297,14 @@ export default function Index({
                         >
                           Detail
                         </Link>
+
+                        <Link
+                          href={`/admin/transaksi/print/${transaksi.id}`}
+                          className="text-indigo-600 hover:text-indigo-900"
+                          target="blank"
+                        >
+                          Print
+                        </Link>
                         <button
                           className="text-rose-600"
                           onClick={() => {
