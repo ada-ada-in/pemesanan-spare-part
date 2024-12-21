@@ -2,7 +2,6 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../configs/database.js";
 import { v6 as uuidv6 } from "uuid";
 import UsersModels from "./user.model.js";
-import { toTransactionNumber } from "../utils/transaksiNumber.js";
 
 class CartModels extends Model {}
 
@@ -25,7 +24,6 @@ CartModels.init(
     transaksi_number: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: toTransactionNumber(),
     },
     price_total: {
       type: DataTypes.INTEGER,

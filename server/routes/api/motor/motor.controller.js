@@ -5,7 +5,7 @@ import ResponseHandler from "../../../utils/response.js";
 export const getCountMotor = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
-    const getAllMotor = await allService.authService.getDataCount();
+    const getAllMotor = await allService.motorService.getDataCount();
     if (!getAllMotor) {
       return response.fail400("Cannot count all motor");
     }

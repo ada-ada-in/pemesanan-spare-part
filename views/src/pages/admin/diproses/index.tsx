@@ -113,10 +113,9 @@ export default function Index({
     return null; // or a loading spinner
   }
 
-  async function handlerDeleteModal(e: any, id: any) {
+  async function handlerDeleteModal(e: any) {
     e.preventDefault();
     setOpen(true);
-    setId(id);
 
     try {
       const request = await fetch(
@@ -131,10 +130,10 @@ export default function Index({
       );
       const response = await request.json();
       if (response.status.code == 200) {
-        toast.success(response.status.message);
+        // toast.success(response.status.message);
         // setTimeout(() => {
         // router.push("/admin/motor");
-        window.location.replace("/admin/motor");
+        window.location.replace("/admin/diproses");
         // }, 500);
       } else {
         toast.error(response.status.message);
@@ -143,6 +142,8 @@ export default function Index({
       console.error(error);
     }
   }
+
+  console.log(id);
   return (
     <>
       <Sidebar profile={profile}>
@@ -306,6 +307,7 @@ export default function Index({
                           className="text-rose-600 hover:text-rose-900 cursor-pointer"
                           onClick={() => {
                             setOpen(true);
+                            setId(transaksi.id);
                           }}
                         >
                           Hapus
@@ -414,7 +416,7 @@ export default function Index({
                         <button
                           className="bg-rose-600 py-2 px-3 text-white rounded-md hover:bg-rose-900 hover:duration-100"
                           onClick={(e) => {
-                            handlerDeleteModal(e, id);
+                            handlerDeleteModal(e);
                             setOpen(false);
                           }}
                         >

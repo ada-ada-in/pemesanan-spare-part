@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "@/components/Sidebar";
 import TableNotButton from "@/components/TableNotButton";
+import Table from "@/components/Table";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -10,10 +11,13 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { getData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
+import toast from "react-hot-toast";
 import Pagination from "@/components/Pagination";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -54,6 +58,9 @@ export default function Index({
 }) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [id, setId] = React.useState("");
+  const [transactionNumber, setTransactionNumber] = React.useState(null);
+  const [name, setName] = React.useState(null);
   const [openImage, setOpenImage] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [startDate, setStartDate] = React.useState("");
@@ -108,10 +115,36 @@ export default function Index({
     return <div>Loading...</div>;
   }
 
+  async function handlerDeleteModal(e: any, id: any) {
+    e.preventDefault();
+    setOpen(true);
+    try {
+      const request = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const response = await request.json();
+      if (response.status.code == 200) {
+        // toast.success(response.status.message);
+        window.location.replace("/admin/transaksi");
+      } else {
+        toast.error(response.status.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
   return (
     <>
       <Sidebar profile={profile}>
-        <TableNotButton
+        <Table
           title="Transaksi"
           description="Management data transaksi pada Yamaha Sabang Raya Motor Handil."
           link="/admin/transaksi/add"
@@ -259,11 +292,22 @@ export default function Index({
                       </td>
                       <td className="min-w-max relative whitespace-nowrap py-4 text-sm font-medium sm:pr-6 flex gap-4">
                         <Link
-                          href={`/admin/diproses/${transaksi.id}`}
+                          href={`/admin/transaksi/${transaksi.id}`}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
                           Detail
                         </Link>
+                        <button
+                          className="text-rose-600"
+                          onClick={() => {
+                            setOpen(true),
+                              setId(transaksi.id),
+                              setTransactionNumber(transaksi.transaksi_number),
+                              setName(transaksi.user.name);
+                          }}
+                        >
+                          Hapus
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -330,7 +374,63 @@ export default function Index({
               </div>
             </div>
           </Dialog>
-        </TableNotButton>
+          <Dialog className="relative z-50" open={open} onClose={setOpen}>
+            <DialogBackdrop
+              transition
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+            />
+            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <DialogPanel
+                  transition
+                  className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg sm:p-6 data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+                >
+                  <div className="sm:flex sm:items-start">
+                    <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                      <ExclamationTriangleIcon
+                        className="h-6 w-6 text-red-600"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                      <DialogTitle
+                        as="h3"
+                        className="text-base font-semibold leading-6 text-gray-900"
+                      >
+                        Yakin ingin menghapus data transaksi{" "}
+                        {`${name} dengagn nomor transaksi ${transactionNumber}`}
+                      </DialogTitle>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Menghapus data membuat data motor yang sudah tersimpan
+                          sebelumnya menghilang dan tidak bisa dikembalian
+                          seperti sebelumnya!
+                        </p>
+                      </div>
+                      <div className="mt-3 space-x-3">
+                        <button
+                          className="bg-rose-600 py-2 px-3 text-white rounded-md"
+                          onClick={(e) => {
+                            handlerDeleteModal(e, id);
+                            setOpen(false);
+                          }}
+                        >
+                          Hapus
+                        </button>
+                        <button
+                          className="bg-cyan-600 py-2 px-3 text-white rounded-md"
+                          onClick={() => setOpen(false)}
+                        >
+                          Kembali
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </div>
+            </div>
+          </Dialog>
+        </Table>
       </Sidebar>
     </>
   );

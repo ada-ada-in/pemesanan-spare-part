@@ -2,10 +2,10 @@ import * as allService from "../../../services/allService.js";
 import ResponseHandler from "../../../utils/response.js";
 import SparePartModels from "../../../models/sparePart.model.js";
 import UsersModels from "../../../models/user.model.js";
+import { toTransactionNumber } from "../../../utils/transaksiNumber.js";
 import { Op } from "sequelize";
 
 // USER
-
 export const CreateOrder = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
@@ -14,8 +14,10 @@ export const CreateOrder = async (req, res) => {
     if (!Array.isArray(spareParts) || spareParts.length === 0) {
       return response.fail400("Please insert valid spare parts and quantities");
     }
+    const transaksi_number = toTransactionNumber();
     const cart = await allService.CartService.create({
       id_user: id,
+      transaksi_number: transaksi_number,
     });
     let totalPrice = 0;
     for (const item of spareParts) {
@@ -57,18 +59,24 @@ export const CreateOrder = async (req, res) => {
   }
 };
 
-export const CreateOrderUser = async (req, res) => {
+export const CreateOrderAdmin = async (req, res) => {
   const response = new ResponseHandler(res);
   try {
-    const { spareParts, id_user } = req.body;
+    const { spareParts, id_user, isStatus, isPaid } = req.body;
 
     if (!Array.isArray(spareParts) || spareParts.length === 0) {
       return response.fail400("Please insert valid spare parts and quantities");
     }
+    const trasactionNumber = toTransactionNumber();
 
     const cart = await allService.CartService.create({
-      id_user,
+      id_user: id_user,
+      transaksi_number: trasactionNumber,
+      isStatus: isStatus,
+      isPaid: isPaid,
     });
+
+    console.log(cart);
 
     let totalPrice = 0;
 

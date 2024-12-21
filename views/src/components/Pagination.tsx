@@ -7,7 +7,7 @@ export default function Pagination({
   currentPage,
   onPageChange,
 }: {
-  totalItems: any;
+  totalItems: number;
   itemsPerPage: number;
   currentPage: number;
   onPageChange: (selected: number) => void;
@@ -17,20 +17,21 @@ export default function Pagination({
   return (
     <div className="pagination-container">
       <ReactPaginate
+        className="flex items-center justify-center gap-2 fonts-semibold text-white p-2 bg-blue-700"
         breakLabel={"..."}
         pageCount={pageCount}
-        forcePage={currentPage - 1}
-        onPageChange={(event) => onPageChange(event.selected + 1)}
-        containerClassName="flex items-center justify-center gap-2 fonts-semibold text-white p-2 bg-blue-700"
-        activeClassName="bg-white text-blue-700 font-bold rounded"
-        pageClassName="page-item"
-        pageLinkClassName="page-link"
-        previousClassName="page-item"
-        previousLinkClassName="page-link"
-        nextClassName="page-item"
-        nextLinkClassName="page-link"
-        breakClassName="page-item"
-        breakLinkClassName="page-link"
+        forcePage={currentPage}
+        onPageChange={(event) => onPageChange(event.selected)}
+        containerClassName={"pagination"}
+        activeClassName={"active"}
+        pageClassName={"page-item"}
+        pageLinkClassName={"page-link"}
+        previousClassName={"page-item"}
+        previousLinkClassName={"page-link"}
+        nextClassName={"page-item"}
+        nextLinkClassName={"page-link"}
+        breakClassName={"page-item"}
+        breakLinkClassName={"page-link"}
         marginPagesDisplayed={1}
         pageRangeDisplayed={2}
       />

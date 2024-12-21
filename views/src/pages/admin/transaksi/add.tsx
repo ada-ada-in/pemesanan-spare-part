@@ -1,11 +1,11 @@
 import React from "react";
-import Sidebar from "@/components/Sidebar";
 import { useRouter } from "next/router";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
 import { GetRole } from "@/libs/manageRole";
 import { postData, getData } from "@/libs/handlerData";
 import Link from "next/link";
+import Sidebar from "@/components/Sidebar";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -24,19 +24,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
     };
   }
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  const [dataUser] = await Promise.all([getData(token, `${backendUrl}/user`)]);
   return {
     props: {
       token,
+      dataUser: dataUser.data || [],
     },
   };
 }
 
-export default function TambahMotor({
+export default function TambahTransaksi({
   token,
   profile,
+  dataUser,
 }: {
   token: string;
   profile: any | null;
+  dataUser: any[];
 }) {
   const router = useRouter();
   const [catchData, setCatchData] = React.useState<any>({
@@ -44,32 +49,31 @@ export default function TambahMotor({
     id_motor: "",
     id_sparepart: "",
   });
-
   const [dataMotor, setDataMotor] = React.useState<any[]>([]);
   const [dataSparePart, setDataSparePart] = React.useState<any[]>([]);
   const [idMotor, setIdMotor] = React.useState<string | undefined>();
   const [idSparepart, setIdSparePart] = React.useState<string | undefined>();
   const [harga, setHarga] = React.useState<{ price?: number }>({});
-
-  // State to hold the cart items
   const [cart, setCart] = React.useState<any[]>([]);
   const [data, setData] = React.useState<any>({
     spareParts: [],
+    isStatus: "",
+    isPaid: "",
+    id_user: "",
   });
 
   const handlerSubmit = async (e: any) => {
     e.preventDefault();
 
     // Add the current item to the cart
-    const newCartItem = {
+    let newCartItem = {
       id_sparepart: idSparepart,
       qty: catchData.qty,
+      price: harga.price,
     };
-
     setCart((prevCart) => {
       const updatedCart = [...prevCart, newCartItem];
 
-      // Update the data state with the new cart
       setData({
         spareParts: updatedCart.map((item) => ({
           id_sparepart: item.id_sparepart,
@@ -79,6 +83,8 @@ export default function TambahMotor({
 
       return updatedCart;
     });
+
+    console.log(data);
   };
 
   React.useEffect(() => {
@@ -139,22 +145,18 @@ export default function TambahMotor({
     const response = await postData(
       e,
       token,
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/order`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/admin`,
       data
     );
+
     if (response) {
       setTimeout(() => {
-        router.push("/user/transaksi");
+        router.push("/admin/transaksi/add");
       }, 1500);
     }
   }
 
-  // Calculate total quantity and price
-  const totalQty = cart.reduce((acc, item) => acc + parseInt(item.qty || 0), 0);
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + (harga.price || 0) * item.qty,
-    0
-  );
+  console.log(data);
 
   return (
     <Sidebar profile={profile}>
@@ -166,7 +168,7 @@ export default function TambahMotor({
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <Link
-            href={"/user/transaksi"}
+            href={"/admin/transaksi"}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Kembali
@@ -242,10 +244,13 @@ export default function TambahMotor({
               </label>
               <div className="mt-2 sm:col-span-2 sm:mt-0">
                 <input
-                  type="number"
+                  type="text"
                   name="price"
                   id="price"
-                  value={harga?.price || ""}
+                  value={new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  }).format(harga?.price || 0)}
                   readOnly
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 />
@@ -280,6 +285,96 @@ export default function TambahMotor({
                 Tambahkan ke Keranjang
               </button>
             </div>
+
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
+              <label
+                htmlFor="id_user"
+                className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
+              >
+                Pelanggan
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <select
+                  name="id_user"
+                  id="id_user"
+                  onChange={(e) =>
+                    setData((prevData: any) => ({
+                      ...prevData,
+                      id_user: e.target.value,
+                    }))
+                  }
+                  value={data.id_user}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  <option value="" disabled>
+                    Pilih Pelanggan
+                  </option>
+                  {dataUser.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
+              <label
+                htmlFor="id_user"
+                className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
+              >
+                Status Pembayaran
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <select
+                  name="isPaid"
+                  id="isPaid"
+                  value={data.isPaid}
+                  onChange={(e) =>
+                    setData((prevData: any) => ({
+                      ...prevData,
+                      isPaid: e.target.value,
+                    }))
+                  }
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  <option value="" disabled>
+                    Pilih Pembayaran
+                  </option>
+                  <option value={"bayar-sebagian"}>Bayar Sebagian</option>
+                  <option value={"lunas"}>Lunas</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
+              <label
+                htmlFor="id_user"
+                className="block text-md font-normal leading-6 text-gray-900 sm:pt-1.5"
+              >
+                Status Barang
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <select
+                  name="isStatus"
+                  id="isStatus"
+                  value={data.isStatus}
+                  onChange={(e) =>
+                    setData((prevData: any) => ({
+                      ...prevData,
+                      isStatus: e.target.value,
+                    }))
+                  }
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                >
+                  <option value="" disabled>
+                    Pilih Status Barang
+                  </option>
+                  <option value={"inden"}>Inden</option>
+                  <option value={"sudah-datang"}>Sudah Datang</option>
+                </select>
+              </div>
+            </div>
           </form>
         </div>
 
@@ -292,15 +387,28 @@ export default function TambahMotor({
                 <span>
                   {dataSparePart.find((s) => s.id === item.id_sparepart)
                     ?.sparepart_name || "Spare Part"}{" "}
-                  - Qty: {item.qty}
+                  - Qty: {item.qty} -{" "}
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                  }).format(item.price * item.qty)}
                 </span>
               </li>
             ))}
+
+            {/* Menghitung Total Harga */}
+            <li className="flex justify-between items-center font-bold">
+              <span>Total:</span>
+              <span>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                }).format(
+                  cart.reduce((total, item) => total + item.price * item.qty, 0)
+                )}
+              </span>
+            </li>
           </ul>
-          <div className="mt-4">
-            <p>Total Qty: {totalQty}</p>
-            <p>Total Price: Rp {totalPrice.toLocaleString()}</p>
-          </div>
           <button
             onClick={handleSubmit}
             className="mt-6 bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded"

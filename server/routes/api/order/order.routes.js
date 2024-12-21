@@ -1,6 +1,7 @@
 import { verifyToken } from "../../../utils/authorization.js";
 import {
   CreateOrder,
+  CreateOrderAdmin,
   getOrderByUser,
   getOrderByCartItem,
   uploadImage,
@@ -13,7 +14,6 @@ import {
   getPembayaranLunas,
   getPembayaranBayarSebagian,
   getPembayaranBelumBayar,
-  CreateOrderUser,
   deleteUserTransaction,
 } from "./order.controller.js";
 import express from "express";
@@ -22,7 +22,7 @@ import { upload } from "../../../utils/uploadImage.js";
 
 router.delete("/order/user/:id", verifyToken, deleteUserTransaction);
 router.post("/order", verifyToken, CreateOrder);
-router.post("/order/admin", verifyToken, CreateOrderUser);
+router.post("/order/admin", verifyToken, CreateOrderAdmin);
 router.put("/upload/:id", upload.single("image"), verifyToken, uploadImage);
 router.put("/updatetransaksi/:id", verifyToken, updateTransaksi);
 router.get("/proses/:id_cart", verifyToken, getOrderProsesById);

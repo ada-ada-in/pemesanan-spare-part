@@ -6,6 +6,7 @@ import { GetServerSidePropsContext } from "next";
 import { getData, updateData } from "@/libs/handlerData";
 import { GetRole } from "@/libs/manageRole";
 import Image from "next/image";
+import Link from "next/link";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const [isLogin, token]: Guard = guard(context);
@@ -89,6 +90,7 @@ export default function DetaiMotor({
   return (
     <Sidebar>
       <h1 className="font-semibold text-2xl">Item Diproses</h1>
+      <Link href={"print"}>Print</Link>
       <div className="mt-10 space-y-8 pb-12 sm:space-y-0 sm:divide-gray-900/10 sm:pb-0">
         <form className="my-12" onSubmit={handlerSubmit}>
           <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-3">
