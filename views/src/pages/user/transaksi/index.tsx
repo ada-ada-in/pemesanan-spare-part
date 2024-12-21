@@ -117,18 +117,12 @@ export default function Index({
     return null;
   }
 
-  console.log(data);
-
-  async function handleDeleteTransaction(
-    e: React.MouseEvent,
-    transactionId: any
-  ) {
+  async function handleDeleteTransaction(e: React.MouseEvent) {
     e.preventDefault();
     setOpen(true);
-    setId(transactionId);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${transactionId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/order/user/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -305,6 +299,7 @@ export default function Index({
                           className="text-rose-600 hover:text-rose-900 cursor-pointer"
                           onClick={() => {
                             setOpen(true);
+                            setId(transaksi.id);
                           }}
                         >
                           Hapus
@@ -387,7 +382,9 @@ export default function Index({
           <Dialog
             className="relative z-50"
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => {
+              setOpen(false);
+            }}
           >
             <DialogBackdrop
               transition
@@ -419,7 +416,7 @@ export default function Index({
                         <Button
                           className="bg-rose-600 py-2 px-3 text-white rounded-md hover:bg-rose-900 hover:duration-100"
                           onClick={(e) => {
-                            handleDeleteTransaction(e, id);
+                            handleDeleteTransaction(e);
                             setOpen(false);
                           }}
                         >
