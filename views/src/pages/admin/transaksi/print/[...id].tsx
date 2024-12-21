@@ -37,7 +37,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       token,
       id,
-      data: responseData.data || [],
+      name: responseData.data.user.name || [],
+      alamat: responseData.data.user.alamat || [],
       backendUrl,
     },
   };
@@ -45,12 +46,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function Print({
   token,
-  data,
+  name,
+  alamat,
   backendUrl,
   id,
 }: {
   token: string;
-  data: any[];
+  name: any;
+  alamat: any;
   id: string;
   backendUrl: any;
 }) {
@@ -79,6 +82,8 @@ export default function Print({
     window.print();
   }, 2000);
 
+  console.log(dataOrder);
+
   return (
     <>
       <section className="container mx-auto py-4 grid grid-rows-3 grid-flow-col">
@@ -102,10 +107,10 @@ export default function Print({
             <p className="font-medium">Email : sabang.handil2022@gmail.com</p>
           </div>
           <div>
-            <p className="font-medium">Nama :</p>
-            <p>----------------------------------------------------</p>
-            <p className="font-medium">Alamat :</p>
-            <p>----------------------------------------------------</p>
+            <p className="font-medium">Nama : {name}</p>
+            <p>--------------------------------------</p>
+            <p className="font-medium">Alamat : {alamat}</p>
+            <p>--------------------------------------</p>
           </div>
         </div>
 
