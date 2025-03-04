@@ -111,14 +111,17 @@ export default function Index({
       let filtered = data;
 
       if (startDate && endDate) {
-        filtered = filtered.filter((callback) => {
-          const transactionDate = new Date(callback.createdAt);
-          return (
-            transactionDate >= new Date(startDate) &&
-            transactionDate <= new Date(endDate)
-          );
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        // Set end date hingga akhir hari
+        end.setHours(23, 59, 59, 999);
+
+        filtered = filtered.filter((transaksi) => {
+          const transactionDate = new Date(transaksi.createdAt);
+          return transactionDate >= start && transactionDate <= end;
         });
       }
+
       if (searchTerm) {
         filtered = filtered.filter((callback) => {
           const { sparepart_name, motor } = callback;

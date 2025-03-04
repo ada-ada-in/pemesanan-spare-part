@@ -1,10 +1,10 @@
 import React from "react";
 import Sidebar from "@/components/Sidebar";
-import TableNotButton from "@/components/TableNotButton";
 import Table from "@/components/Table";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
 import {
   Dialog,
   DialogBackdrop,
@@ -82,12 +82,14 @@ export default function Index({
       let filtered = data;
 
       if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        // Set end date hingga akhir hari
+        end.setHours(23, 59, 59, 999);
+
         filtered = filtered.filter((transaksi) => {
           const transactionDate = new Date(transaksi.createdAt);
-          return (
-            transactionDate >= new Date(startDate) &&
-            transactionDate <= new Date(endDate)
-          );
+          return transactionDate >= start && transactionDate <= end;
         });
       }
 
@@ -141,6 +143,34 @@ export default function Index({
     }
   }
 
+  const exportToExcel = () => {
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      console.error("Data is not in the correct format or is empty");
+      return;
+    }
+
+    const dataToExport = filteredData.map((item) => ({ ...item }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+    XLSX.writeFile(wb, "Transaksi.xlsx");
+  };
+
+  const exportAllDataExcel = () => {
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Data is not in the correct format or is empty");
+      return;
+    }
+
+    const dataToExport = data.map((item) => ({ ...item }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+    XLSX.writeFile(wb, "Transaksi.xlsx");
+  };
+
   return (
     <>
       <Sidebar profile={profile}>
@@ -172,6 +202,18 @@ export default function Index({
               className="border rounded p-2"
               placeholder="Search by Name, Transaction Number, or Status"
             />
+            <button
+              className="bg-green-500 text-white p-2 rounded"
+              onClick={exportToExcel}
+            >
+              Download Excel
+            </button>
+            <button
+              className="bg-green-500 text-white p-2 rounded"
+              onClick={exportAllDataExcel}
+            >
+              Download All Data
+            </button>
           </div>
           {filteredData && filteredData.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-300">
