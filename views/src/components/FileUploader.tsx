@@ -73,6 +73,40 @@ export default function FileUploader({
           <p className="text-xs text-gray-500">
             File should be of format .png, .jpeg, .jpg or .pdf
           </p>
+          <div className="row">
+            <div className="col text-center">
+              <Image
+                src={"/assets/bca.jpeg"}
+                width={240}
+                height={240}
+                alt="bca"
+              />
+              <p>Nomor Rekening : 819034567</p>
+              <p>Atas Nama : PT.Jambi Motor Kencana Indah</p>
+            </div>
+            <div className="col text-center my-5">
+              <Image
+                className="mb-5"
+                src={"/assets/mandiri.png"}
+                width={240}
+                height={240}
+                alt="Mandiri"
+              />
+              <p>Nomor Rekening : 819034567</p>
+              <p>Atas Nama : PT.Jambi Motor Kencana Indah</p>
+            </div>
+            <div className="col">
+              <Image
+                className="mb-5"
+                src={"/assets/bninews.png"}
+                width={240}
+                height={240}
+                alt="BNI"
+              />
+              <p>Nomor Rekening : 819034567</p>
+              <p>Atas Nama : PT.Jambi Motor Kencana Indah</p>
+            </div>
+          </div>
         </div>
         <form
           onSubmit={handleSubmit}

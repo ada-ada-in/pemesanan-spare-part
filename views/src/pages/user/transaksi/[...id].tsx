@@ -52,13 +52,6 @@ export default function DetaiMotor({
   id: number;
   cartItem: any;
 }) {
-  const router = useRouter();
-  const [data, setData] = useState({
-    qty: cartItem?.qty || "",
-    harga: cartItem?.harga || "",
-    id: cartItem?.id || "",
-  });
-
   const totalHarga = cartItem.reduce(
     (total: number, item: any) => total + item.harga,
     0

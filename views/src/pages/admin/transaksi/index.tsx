@@ -149,23 +149,41 @@ export default function Index({
       return;
     }
 
-    const dataToExport = filteredData.map((item) => ({ ...item }));
+    // Sorting data berdasarkan tanggal transaksi (createdAt) secara ascending
+    const sortedData = [...filteredData].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    // Map data yang ingin diekspor (pastikan memasukkan semua field yang diinginkan)
+    const dataToExport = sortedData.map((item, i) => ({
+      Nomor: i + 1,
+      Nama: item.user.name,
+      Alamat: item.user.alamat,
+      "Nomor Transaksi": item.transaksi_number,
+      Email: item.user.email,
+      "Status Pembayaran": item.isPaid,
+      "Status Pemesanan": item.isStatus,
+      Harga: "Rp. " + item.price_total,
+      Tanggal: item.createdAt,
+    }));
 
     const ws = XLSX.utils.json_to_sheet(dataToExport);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
-    XLSX.writeFile(wb, "Transaksi.xlsx");
-  };
 
-  const exportAllDataExcel = () => {
-    if (!Array.isArray(data) || data.length === 0) {
-      console.error("Data is not in the correct format or is empty");
-      return;
-    }
+    // Atur lebar kolom (opsional)
+    ws["!cols"] = [
+      { wch: 10 }, // Nomor
+      { wch: 20 }, // Nama
+      { wch: 30 }, // Alamat
+      { wch: 25 }, // Email
+      { wch: 20 }, // Status Pembayaran
+      { wch: 20 }, // Status Pemesanan
+      { wch: 15 }, // Harga
+      { wch: 20 }, // Tanggal
+    ];
 
-    const dataToExport = data.map((item) => ({ ...item }));
+    ws["!autofilter"] = { ref: "A1:H1" };
 
-    const ws = XLSX.utils.json_to_sheet(dataToExport);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
     XLSX.writeFile(wb, "Transaksi.xlsx");
@@ -207,12 +225,6 @@ export default function Index({
               onClick={exportToExcel}
             >
               Download Excel
-            </button>
-            <button
-              className="bg-green-500 text-white p-2 rounded"
-              onClick={exportAllDataExcel}
-            >
-              Download All Data
             </button>
           </div>
           {filteredData && filteredData.length > 0 ? (

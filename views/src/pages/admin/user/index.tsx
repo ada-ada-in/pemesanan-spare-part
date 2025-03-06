@@ -10,6 +10,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import * as XLSX from "xlsx";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
@@ -148,6 +149,45 @@ export default function Index({
     }
   }
 
+  const exportToExcel = () => {
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      console.error("Data is not in the correct format or is empty");
+      return;
+    }
+
+    // Sorting data berdasarkan tanggal transaksi (createdAt) secara ascending
+    const sortedData = [...filteredData].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    // Map data yang ingin diekspor (pastikan memasukkan semua field yang diinginkan)
+    const dataToExport = sortedData.map((item, i) => ({
+      Nomor: i + 1,
+      Pengguna: item.name,
+      Email: item.email,
+      Alamat: item.alamat,
+      Handphone: item.no_hp,
+      Role: item.role,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Atur lebar kolom (opsional)
+    ws["!cols"] = [
+      { wch: 10 }, // Nomor
+      { wch: 20 }, // spare part
+      { wch: 30 }, // motor
+      { wch: 25 }, // tahun
+    ];
+
+    ws["!autofilter"] = { ref: "A1:F1" };
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+    XLSX.writeFile(wb, "Transaksi.xlsx");
+  };
+
   return (
     <>
       <Sidebar profile={profile}>
@@ -180,6 +220,12 @@ export default function Index({
               className="border rounded p-2"
               placeholder="Search by Name, Transaction Number, or Status"
             />
+            <button
+              className="bg-green-500 text-white p-2 rounded"
+              onClick={exportToExcel}
+            >
+              Download Excel
+            </button>
           </div>
           {filteredData && filteredData.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-300">

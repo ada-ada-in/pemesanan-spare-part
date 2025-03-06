@@ -10,6 +10,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
+import * as XLSX from "xlsx";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { guard, Guard } from "@/libs/middleware";
 import { GetServerSidePropsContext } from "next";
@@ -117,8 +118,6 @@ export default function Index({
     return null; // or a loading spinner
   }
 
-  console.log(data);
-
   async function handlerDeleteModal(e: any, id: any) {
     e.preventDefault();
     setOpen(true);
@@ -147,6 +146,43 @@ export default function Index({
       console.error(error);
     }
   }
+
+  console.log({ filteredData });
+
+  const exportToExcel = () => {
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      console.error("Data is not in the correct format or is empty");
+      return;
+    }
+
+    // Sorting data berdasarkan tanggal transaksi (createdAt) secara ascending
+    const sortedData = [...filteredData].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    // Map data yang ingin diekspor (pastikan memasukkan semua field yang diinginkan)
+    const dataToExport = sortedData.map((item, i) => ({
+      Nomor: i + 1,
+      Motor: item.motor_name,
+      Tahun: item.tahun,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Atur lebar kolom (opsional)
+    ws["!cols"] = [
+      { wch: 10 }, // Nomor
+      { wch: 20 }, // motor
+      { wch: 30 }, // tahun
+    ];
+
+    ws["!autofilter"] = { ref: "A1:C1" };
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+    XLSX.writeFile(wb, "Transaksi.xlsx");
+  };
 
   return (
     <>
@@ -180,6 +216,12 @@ export default function Index({
               className="border rounded p-2"
               placeholder="Search by Motor Name"
             />
+            <button
+              className="bg-green-500 text-white p-2 rounded"
+              onClick={exportToExcel}
+            >
+              Download Excel
+            </button>
           </div>
           {filteredData && filteredData.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-300">

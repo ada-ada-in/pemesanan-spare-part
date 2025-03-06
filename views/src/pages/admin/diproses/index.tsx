@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
+import * as XLSX from "xlsx";
 import {
   Dialog,
   DialogBackdrop,
@@ -146,7 +147,52 @@ export default function Index({
     }
   }
 
-  console.log(id);
+  const exportToExcel = () => {
+    if (!Array.isArray(filteredData) || filteredData.length === 0) {
+      console.error("Data is not in the correct format or is empty");
+      return;
+    }
+
+    // Sorting data berdasarkan tanggal transaksi (createdAt) secara ascending
+    const sortedData = [...filteredData].sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    // Map data yang ingin diekspor (pastikan memasukkan semua field yang diinginkan)
+    const dataToExport = sortedData.map((item, i) => ({
+      Nomor: i + 1,
+      Nama: item.user.name,
+      Alamat: item.user.alamat,
+      Email: item.user.email,
+      "Nomor Transaksi": item.transaksi_number,
+      "Status Pembayaran": item.isPaid,
+      "Status Pemesanan": item.isStatus,
+      Harga: "Rp. " + item.price_total,
+      Tanggal: item.createdAt,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+    // Atur lebar kolom (opsional)
+    ws["!cols"] = [
+      { wch: 10 }, // Nomor
+      { wch: 20 }, // Nama
+      { wch: 30 }, // Alamat
+      { wch: 25 }, // Email
+      { wch: 20 }, // Status Pembayaran
+      { wch: 20 }, // Status Pemesanan
+      { wch: 15 }, // Harga
+      { wch: 20 }, // Tanggal
+    ];
+
+    ws["!autofilter"] = { ref: "A1:H1" };
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Transaksi");
+    XLSX.writeFile(wb, "Transaksi.xlsx");
+  };
+
   return (
     <>
       <Sidebar profile={profile}>
@@ -178,6 +224,12 @@ export default function Index({
               className="border rounded p-2"
               placeholder="Search by Name, Transaction Number, or Status"
             />
+            <button
+              className="bg-green-500 text-white p-2 rounded"
+              onClick={exportToExcel}
+            >
+              Download Excel
+            </button>
           </div>
           {filteredData && filteredData.length > 0 ? (
             <table className="min-w-full divide-y divide-gray-300">
